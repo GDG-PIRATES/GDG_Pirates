@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body {
+  --bg-color: #f4f8fc;
+  --text-color: #333;
+  --navbar-bg: #0077b6;
+  --card-bg: #ffffff;
+  --button-bg: #28a745;
+  --button-hover-bg: #218838;
+}
+
+
+body.dark-mode {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --navbar-bg: #1e1e1e;
+  --card-bg: #1c1c1c;
+  --button-bg: #28a745;
+  --button-hover-bg: #1e7e34;
+}
+
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px; 
+  background-color: var(--navbar-bg);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 25px; 
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+.navbar ul li a:hover {
+  color: #a1d6e2;
+}
+
+
+.homepage-container {
+  width: 100vw;
+  min-height: 100vh;
+  padding-top: 100px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-color);
+}
+
+
+.welcome-section {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px; 
+}
+
+.welcome-section h1 {
+  font-size: 36px; 
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.cancer-detection-container {
+  margin-top: 20px;
+  max-width: 450px; 
+  padding: 30px; 
+  background: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 12px; 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+  text-align: center;
+}
+
+.cancer-detection-container h2 {
+  font-size: 28px; 
+  color: var(--navbar-bg);
+}
+
+/* Button */
+.detect-btn {
+  background-color: var(--button-bg);
+  color: white;
+  padding: 15px 25px; /* Increased padding */
+  border: none;
+  border-radius: 10px; /* Increased border radius */
+  cursor: pointer;
+  margin-top: 20px; /* Increased margin */
+  font-size: 20px; /* Increased font size */
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.detect-btn:hover {
+  background-color: var(--button-hover-bg);
+  transform: scale(1.08);
+}
+
+/* Features Container */
+.features-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px; /* Increased gap */
+  margin-top: 60px; /* Increased margin */
+}
+
+
+.feature-box {
+  width: 350px; 
+  padding: 25px; 
+  background: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 12px; 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+  text-align: center;
+}
+
+.feature-box h2 {
+  font-size: 24px; 
+  color: var(--navbar-bg);
+}
+
+
+.main-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 90%;
+  margin-top: 50px;
+}
+
+
+.tests-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 30px; 
+  max-width: 700px; 
+}
+
+
+.test-box {
+  background-color: var(--card-bg);
+  padding: 25px; 
+  text-align: center;
+  border-radius: 12px; 
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); 
+  cursor: pointer;
+  font-size: 20px; 
+  transition: 0.3s;
+}
+
+.test-box:hover {
+  transform: scale(1.08);
+}
+
+.previous-tests {
+  width: 500px; 
+  padding: 40px; 
+  background-color: var(--card-bg);
+  border-radius: 12px; 
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); 
+  text-align: center;
+}
+
+.previous-tests h2 {
+  font-size: 24px; 
+}
+
+
+@media (max-width: 1024px) {
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tests-container {
+    grid-template-columns: repeat(1, 1fr); 
+  }
+
+  .previous-tests {
+    width: 90%;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .features-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-box {
+    width: 90%;
+  }
+
+  .articles-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .article-box {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .feature-box,
+  .article-box {
+    width: 100%;
+  }
+}
