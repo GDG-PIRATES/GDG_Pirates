@@ -1,0 +1,156 @@
+/* .container {
+  width: 100%; 
+  margin-left: 5%; 
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  margin-bottom:10000px;
+}
+
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.box {
+  width: 300px; 
+  height: 250px;
+  border: 5px dashed #4CAF50;
+  border-radius: 10px;
+  background-color: #ffffffb0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+}
+
+.button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 7%; 
+}
+
+.button:hover {
+  background-color: #388E3C;
+ 
+}
+.tex{
+  font-size: 40px;
+}
+.inp{
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 25px;
+}
+.user{
+  font-size: 20px;
+  color: #333;
+margin-bottom: 4px;
+  display: block;
+} */
+
+
+
+
+.container {
+    width: 100%;
+    margin-left: 5%;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 100vh;
+  }
+  
+  .upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  
+  }
+  
+  .box {
+    width: 300px;
+    height: 250px;
+    /* border: 5px dashed #4CAF50; */
+    border-radius: 10px;
+    background-color: #ffffffb0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 6%;
+  
+  }
+  
+  .button:hover {
+    background-color: #388E3C;
+  }
+  
+  .tex {
+    font-size: 40px;
+  }
+  
+  .inp {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 25px;
+  }
+  
+  
+  .user {
+    width: 500px;  
+    height: 250px; 
+    /* border: 5px dashed #4CAF50; */
+    border-radius: 10px;
+    background-color: #ffffffb0;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    /* justify-content: center; */
+    /* text-align: center; */
+    padding: 10px;
+    margin-top: 20px; 
+    position: absolute;  
+    left: 50px; 
+    
+    top: 400px; 
+  }
+  
+  .user h1 {
+    font-size: 25px;
+    margin-bottom: 10px;
+  }
+  
+  .user p {
+    font-size: 18px;
+    margin: 5px 0;
+  }
+  

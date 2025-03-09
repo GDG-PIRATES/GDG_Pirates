@@ -52,10 +52,10 @@ const HomePage = () => {
         
         <div className="tests-container">
           {[
-            { name: "Cancer Detection", route: "/cancer-detection" },
-            { name: "Diabetes", route: "/diabetes-check" },
-            { name: "Blood Pressure", route: "/blood-pressure-check" },
-            { name: "Blood Test", route: "/blood-test" }
+            { name: "Cancer Detection", route: "/test" },
+            { name: "Diabetes", route: "/test" },
+            { name: "Blood Pressure", route: "/test" },
+            { name: "Blood Test", route: "/test" }
           ].map((test, index) => (
             <div key={index} className="test-box" onClick={() => navigate(test.route)}>
               <h2>{test.name}</h2>
@@ -63,15 +63,17 @@ const HomePage = () => {
             </div>
           ))}
         </div>
-
-       
         <div className="previous-tests">
-          <h3>Previous Test Results</h3>
+       
+        <div className="headd">Previous Test Results</div>
           <div className="test-dropdown">
-            
-            <option value="test1">Diabetes - 2024/03/06 - 10:30 AM</option>
-            <option value="test2">Blood Pressure - 2024/03/05 - 03:45 PM</option>
-            <option value="test3">Cancer Detection - 2024/03/02 - 12:15 PM</option>
+            <div className="prev">sbvhbvj</div>
+            <div className="prev">sbvhbvj</div> 
+            <div className="prev">sbvhbvj</div>
+            <div className="prev">sbvhbvj</div>
+            <div className="prev">sbvhbvj</div> 
+            <div className="prev">sbvhbvj</div>
+            <div className="prev">sbvhbvj</div>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { auth, googleProvider } from "../firebase";
 import axios from "axios";
+
 import {
   signInWithPopup,
   createUserWithEmailAndPassword,
@@ -32,7 +33,8 @@ const Login = () => {
       
       console.log(response.data); // Ensure Flask returns a JSON response
   
-      navigate("/home"); // Redirect to home page after login
+      navigate("/loading");
+
     } catch (error) {
       console.error("Google Login Error:", error);
       alert(error.message);

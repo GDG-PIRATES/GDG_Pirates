@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 * {
@@ -73,9 +74,9 @@ body.dark-mode {
   min-height: 100vh;
   padding-top: 100px; 
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
   background-color: var(--bg-color);
 }
 
@@ -185,16 +186,36 @@ body.dark-mode {
 .test-box:hover {
   transform: scale(1.08);
 }
-
+.test-dropdown{
+  flex-grow: 1;
+  overflow: auto; 
+}
 .previous-tests {
-  width: 500px; 
+  width: 600px; 
+  height: 500px;
   padding: 40px; 
   background-color: var(--card-bg);
   border-radius: 12px; 
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); 
-  text-align: center;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
+.prev{
+  font-size: 24px;
+  /* font-weight: bold; */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); 
+  text-align: center;
+  padding: 20px;
+  z-index: 1; 
 
+}
+.headd{
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  position: sticky;
+}
 .previous-tests h2 {
   font-size: 24px; 
 }
@@ -212,7 +233,7 @@ body.dark-mode {
 
   .previous-tests {
     width: 90%;
-    margin-top: 30px;
+    margin-top: 10px;
   }
 }
 

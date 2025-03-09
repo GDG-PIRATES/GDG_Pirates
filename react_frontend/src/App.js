@@ -5,7 +5,9 @@ import { auth } from "./firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Login from "./components/Login";
 import Home from "./components/HomePage";
-
+import Test from "./components/Test";
+import loading from "./components/GoogleLoginRedirect";
+import GoogleLoginRedirect from "./components/GoogleLoginRedirect";
 
 
 const ProtectedRoute = ({ children }) => {
@@ -23,7 +25,10 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        
+        <Route path="/loading" element={<GoogleLoginRedirect />} />
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/test" element={<ProtectedRoute><Test /></ProtectedRoute>}/>
       </Routes>
     </Router>
   );
