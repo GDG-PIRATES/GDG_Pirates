@@ -1,0 +1,36 @@
+.result-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(#007bff var(--percent, 0%), #ddd 0%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    margin: 20px auto;
+    position: relative;
+  }
+  
+  .circle::before {
+    content: "";
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+  }
+  
+  .circle span {
+    position: relative;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+  }
+  

@@ -8,6 +8,8 @@ import Home from "./components/HomePage";
 import Test from "./components/Test";
 import loading from "./components/GoogleLoginRedirect";
 import GoogleLoginRedirect from "./components/GoogleLoginRedirect";
+import PredictionForm from "./components/GetDetailsForPrediction";
+import PredictionResult from "./components/PredictionResult";
 
 
 const ProtectedRoute = ({ children }) => {
@@ -29,6 +31,8 @@ const App = () => {
         <Route path="/loading" element={<GoogleLoginRedirect />} />
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/test" element={<ProtectedRoute><Test /></ProtectedRoute>}/>
+        <Route path="/prediction" element={<ProtectedRoute><PredictionForm /></ProtectedRoute>}/>
+        <Route path="/result" element={<ProtectedRoute><PredictionResult/></ProtectedRoute>}/>
       </Routes>
     </Router>
   );

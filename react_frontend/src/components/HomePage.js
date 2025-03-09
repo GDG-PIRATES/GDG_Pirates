@@ -53,7 +53,7 @@ const HomePage = () => {
         <div className="tests-container">
           {[
             { name: "Cancer Detection", route: "/test" },
-            { name: "Diabetes", route: "/test" },
+            { name: "Diabetes", route: "/prediction" },
             { name: "Blood Pressure", route: "/test" },
             { name: "Blood Test", route: "/test" }
           ].map((test, index) => (
