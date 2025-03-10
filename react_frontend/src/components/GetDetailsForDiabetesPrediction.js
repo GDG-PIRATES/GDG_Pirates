@@ -4,7 +4,7 @@ import axios from "axios";
 import "../predictForm.css";
 
 
-const PredictionForm = () => {
+const DiabetesPredictionForm = () => {
   const [formData, setFormData] = useState({
     A1Cresult_8: "",
     A1Cresult_Norm: "",
@@ -93,4 +93,4 @@ const PredictionForm = () => {
   );
 };
 
-export default PredictionForm;
+export default DiabetesPredictionForm;

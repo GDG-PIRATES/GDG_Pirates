@@ -2,6 +2,7 @@ import React from "react";
 import '../Home.css'
 import "../Test.css"; 
 import  { useState } from "react";
+
 const Test = () => {
   const [file1, setFile1] = useState(null);
   
@@ -26,7 +27,7 @@ const Test = () => {
       <nav className="navbar">
         
         <ul>
-          <li><a href="#">Home</a></li>
+          <li><a href="/home">Home</a></li>
           <li><a href="#">Contact</a></li>
           <li><a href="#">Profile</a></li>
           <li><a href="#">About Us</a></li>
@@ -49,13 +50,12 @@ const Test = () => {
     </div>
     <div className="user">
       <h1>User Details</h1>
-      <p>Name:Karthik Acharya</p>
+      <p>Name:</p>
       <p>Age:19</p>
       <p>Gender:Male</p>
     </div>
    < div className="box-container">
     <div className="box1">
-<h1>djibw</h1>
     </div>
     <div className="box2">
         
