@@ -4,19 +4,21 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "../Home.css";
 
+
 const HomePage = () => {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("darkMode") === "enabled"
   );
-
- 
-  const toggleDarkMode = () => {
-    setDarkMode((prevMode) => !prevMode);
-  };
+  const [previousResults, setPreviousResults] = useState([]);
 
   useEffect(() => {
+    // Retrieve previous test results from localStorage
+    const storedResults = JSON.parse(localStorage.getItem("previousResults")) || [];
+    setPreviousResults(storedResults);
+
+    // Apply dark mode
     if (darkMode) {
       document.body.classList.add("dark-mode");
       localStorage.setItem("darkMode", "enabled");
@@ -26,30 +28,42 @@ const HomePage = () => {
     }
   }, [darkMode]);
 
+  const toggleDarkMode = () => {
+    setDarkMode((prevMode) => !prevMode);
+  };
+
+  // 🔴 Function to clear previous test results
+  const clearResults = () => {
+    localStorage.removeItem("previousResults"); // Remove stored results
+    setPreviousResults([]); // Clear state
+    alert("Previous results deleted!");
+  };
+
   return (
     <div className="homepage-container">
-     
+      {/* Navbar */}
       <nav className="navbar">
-        <h2>Health App</h2>
+        <h2 className={darkMode ? "dark-mode-text" : ""}>DetectX</h2>
         <ul>
-          <li><a href="#">Home</a></li>
+          <li><a href="/home">Home</a></li>
           <li><a href="#">Contact</a></li>
           <li><a href="#">Profile</a></li>
           <li><a href="#">About Us</a></li>
         </ul>
-       
-        <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-          {darkMode ? "☀ Light Mode" : "🌙 Dark Mode"}
-        </button>
+        <div className="toggle-container" onClick={toggleDarkMode}>
+          <span className="icon">☀</span>
+          <div className="toggle-circle"></div>
+          <span className="icon">🌙</span>
+        </div>
       </nav>
 
-      
+      {/* Welcome Section */}
       <div className="welcome-section">
         <h1>Welcome, {user?.displayName || user?.email}!</h1>
       </div>
 
+      {/* Test Sections */}
       <div className="main-content">
-        
         <div className="tests-container">
           {[
             { name: "Cancer Detection", route: "/test" },
@@ -58,23 +72,45 @@ const HomePage = () => {
             { name: "Blood Test", route: "/test" }
           ].map((test, index) => (
             <div key={index} className="test-box" onClick={() => navigate(test.route)}>
-              <h2>{test.name}</h2>
+              <h2 className={darkMode ? "dark-mode-text" : ""}>{test.name}</h2>
               <button className="detect-btn">Start Test</button>
             </div>
           ))}
         </div>
+
+        {/* Previous Test Results */}
         <div className="previous-tests">
-       
-        <div className="headd">Previous Test Results</div>
+          <div className="headd">Previous Test Results</div>
           <div className="test-dropdown">
-            <div className="prev">sbvhbvj</div>
-            <div className="prev">sbvhbvj</div> 
-            <div className="prev">sbvhbvj</div>
-            <div className="prev">sbvhbvj</div>
-            <div className="prev">sbvhbvj</div> 
-            <div className="prev">sbvhbvj</div>
-            <div className="prev">sbvhbvj</div>
+            {previousResults.length > 0 ? (
+              previousResults.map((result, index) => (
+                <div key={index} className="prev">
+                  {result.testName}: {result.result.toFixed(2)}%
+                </div>
+              ))
+            ) : (
+              <div className="prev">No previous results</div>
+            )}
           </div>
+
+          {previousResults.length > 0 && (
+            <button 
+              onClick={clearResults} 
+              style={{
+                backgroundColor: "red", 
+                color: "white", 
+                border: "none", 
+                padding: "10px 15px", 
+                cursor: "pointer", 
+                marginTop: "10px",
+                fontWeight:"700",
+                fontFamily:"Poppins"
+
+              }}
+            >
+              Clear Previous Results
+            </button>
+          )}
         </div>
       </div>
     </div>

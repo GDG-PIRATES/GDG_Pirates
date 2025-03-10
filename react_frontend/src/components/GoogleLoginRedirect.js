@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react"; // Cool loader icon
-import "../GoogleLoginRedirect.css"; // Import CSS file
+import { Loader2 } from "lucide-react";
+import "../GoogleLoginRedirect.css"; 
 
 export default function GoogleLoginRedirect() {
   const [loading, setLoading] = useState(true);

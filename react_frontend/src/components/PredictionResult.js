@@ -12,6 +12,16 @@ const PredictionResult = () => {
       const parsedData = JSON.parse(data);
       setPrediction(parsedData.prediction);
       document.documentElement.style.setProperty("--percent", `${parsedData.prediction}%`);
+
+      // Retrieve previous results
+      let previousResults = JSON.parse(localStorage.getItem("previousResults")) || [];
+
+      // Check if the latest result is already stored
+      const lastResult = previousResults.length > 0 ? previousResults[previousResults.length - 1] : null;
+      if (!lastResult || lastResult.result !== parsedData.prediction) {
+        previousResults.push({ testName: "Diabetes", result: parsedData.prediction });
+        localStorage.setItem("previousResults", JSON.stringify(previousResults));
+      }
     } else {
       navigate("/");
     }
@@ -19,7 +29,7 @@ const PredictionResult = () => {
 
   return (
     <div className="result-container">
-      <h2>Prediction Result</h2>
+      <h2>Diabetes Risk Assessment</h2>
       {prediction !== null ? (
         <div className="circle">
           <span>{prediction.toFixed(2)}%</span>

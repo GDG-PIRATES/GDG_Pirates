@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../predictForm.css";
 
+
 const PredictionForm = () => {
   const [formData, setFormData] = useState({
     A1Cresult_8: "",
@@ -20,7 +21,25 @@ const PredictionForm = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: Number(e.target.value) });
+    const { name, value } = e.target;
+    let newValue = Number(value);
+
+    if (["A1Cresult_8", "A1Cresult_Norm", "max_glu_serum_300", "max_glu_serum_Norm"].includes(name)) {
+      if (newValue !== 0 && newValue !== 1) {
+        alert("Kindly enter only 0 or 1 for this field.");
+        newValue = ""; 
+      }
+    }
+
+
+    if (["age"].includes(name)) {
+      if (newValue <=0) {
+        alert("Kindly enter a valid age.");
+        newValue = ""; 
+      }
+    }
+
+    setFormData({ ...formData, [name]: newValue });
   };
 
   const handleSubmit = async (e) => {
@@ -32,7 +51,6 @@ const PredictionForm = () => {
         predictData
       );
 
-      // Store prediction data in local storage and navigate to result page
       localStorage.setItem("predictionData", JSON.stringify(response.data));
       navigate("/result");
     } catch (error) {
@@ -44,32 +62,33 @@ const PredictionForm = () => {
     <div className="container">
       <h2>Diabetes Prediction</h2>
       <form onSubmit={handleSubmit}>
-  {[
-    { key: "A1Cresult_8", label: "Enter 1 if HbA1C Level greater than 8% else 0" },
-    { key: "A1Cresult_Norm", label: "A1C Result (Normal=1, Abnormal=0)" },
-    { key: "max_glu_serum_300", label: "Enter 1 if Glucose Serum is greater than 300 mg/dL else 0" },
-    { key: "max_glu_serum_Norm", label: "Max Glucose Serum (Normal=1, Abnormal=0)" },
-    { key: "num_medications", label: "Number of Medications Taken for Diabetes or related conditions" },
-    { key: "num_lab_procedures", label: "Number of Lab Procedures under gone recently" },
-    { key: "number_inpatient", label: "Number of Times admitted to Hospital for care" },
-    { key: "age", label: "Age (Years)" },
-    { key: "time_in_hospital", label: "Time Spent in Hospital (Days) during last admission" },
-    { key: "number_diagnoses", label: "Number of Health conditions Diagnosed (HyperTension, Heart Disease)" }
-  ].map(({ key, label }) => (
-    <div key={key}>
-      <label>{label}:</label>
-      <input
-        type="number"
-        name={key}
-        value={formData[key]}
-        placeholder={`Enter ${label}`}
-        onChange={handleChange}
-        required
-      />
-    </div>
-  ))}
-  <button type="submit">Predict</button>
-</form>
+        {[
+          { key: "A1Cresult_8", label: "Enter 1 if HbA1C Level greater than 8% else 0" },
+          { key: "A1Cresult_Norm", label: "A1C Result (Normal=1, Abnormal=0)" },
+          { key: "max_glu_serum_300", label: "Enter 1 if Glucose Serum is greater than 300 mg/dL else 0" },
+          { key: "max_glu_serum_Norm", label: "Max Glucose Serum (Normal=1, Abnormal=0)" },
+          { key: "num_medications", label: "Number of Medications Taken for Diabetes or related conditions" },
+          { key: "num_lab_procedures", label: "Number of Lab Procedures undergone recently" },
+          { key: "number_inpatient", label: "Number of Times admitted to Hospital for care" },
+          { key: "age", label: "Age (Years)" },
+          { key: "time_in_hospital", label: "Time Spent in Hospital (Days) during last admission" },
+          { key: "number_diagnoses", label: "Number of Health conditions Diagnosed (Hypertension, Heart Disease)" }
+        ].map(({ key, label }) => (
+          <div key={key}>
+            <label>{label}:</label>
+            <input
+              type="number"
+              name={key}
+              value={formData[key]}
+              placeholder={`Enter ${label}`}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        ))}
+        <button type="submit">Predict</button>
+        <button onClick={() => navigate("/home")}>Go Back</button>
+      </form>
     </div>
   );
 };
