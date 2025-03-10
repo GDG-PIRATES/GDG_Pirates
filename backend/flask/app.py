@@ -21,8 +21,7 @@ def login():
 
 # Load trained model
 model = xgb.Booster()
-model.load_model("R:\\Mini Projects\\GDG_Pirates\\backend\\models\\diabetes_model .json")
-
+model.load_model("C:/Users/HP/OneDrive/Documents/GitHub/ALL-PROJECTS/GDG Project All Files/GDG_Pirates/backend/models/diabetes_model .json")
 FEATURES = [
     "A1Cresult_>8", "A1Cresult_Norm", "max_glu_serum_>300", "max_glu_serum_Norm",
     "num_medications", "num_lab_procedures", "number_inpatient", "age",
