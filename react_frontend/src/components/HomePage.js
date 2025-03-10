@@ -32,7 +32,7 @@ const HomePage = () => {
     setDarkMode((prevMode) => !prevMode);
   };
 
-  // 🔴 Function to clear previous test results
+  // Function to clear previous test results
   const clearResults = () => {
     localStorage.removeItem("previousResults"); // Remove stored results
     setPreviousResults([]); // Clear state
@@ -46,7 +46,7 @@ const HomePage = () => {
         <h2 className={darkMode ? "dark-mode-text" : ""}>DetectX</h2>
         <ul>
           <li><a href="/home">Home</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="#">Wellness Guide</a></li>
           <li><a href="#">Profile</a></li>
           <li><a href="#">About Us</a></li>
         </ul>

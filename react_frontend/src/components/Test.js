@@ -28,7 +28,7 @@ const Test = () => {
         
         <ul>
           <li><a href="/home">Home</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="#">Wellness Guide</a></li>
           <li><a href="#">Profile</a></li>
           <li><a href="#">About Us</a></li>
         </ul>
