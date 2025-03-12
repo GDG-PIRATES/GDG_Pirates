@@ -1,7 +1,12 @@
 import { initializeApp } from "firebase/app";
+<<<<<<< HEAD
 import { getAuth, GoogleAuthProvider} from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+=======
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
+
+>>>>>>> a921349179894e92e03885ee69b349922c9a7416
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBsKEgiUIH7368u-VJ_JtzTsHbWfu5fFzU",
@@ -9,12 +14,13 @@ const firebaseConfig = {
   projectId: "loginapp-9176b",
   storageBucket: "loginapp-9176b.appspot.app",
   messagingSenderId: "418353873931",
-  appId: "1:418353873931:web:9d1b4bfe2472d5febf730e"
+  appId: "1:418353873931:web:9d1b4bfe2472d5febf730e",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+<<<<<<< HEAD
 const googleProvider =new GoogleAuthProvider();
 
 // Function to set up reCAPTCHA
@@ -58,3 +64,8 @@ const googleProvider =new GoogleAuthProvider();
 const db = getFirestore(app);
 const storage = getStorage(app);
 export { auth, googleProvider, db, storage, doc, setDoc, getDoc };
+=======
+const googleProvider = new GoogleAuthProvider();
+
+export { auth, googleProvider };
+>>>>>>> a921349179894e92e03885ee69b349922c9a7416
