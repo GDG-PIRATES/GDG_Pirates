@@ -1,6 +1,6 @@
 import React from "react";
-import '../Home.css'
-import "../Test.css"; 
+//import '../Home.css'
+import styles from"../Test.css"; 
 import  { useState } from "react";
 
 const Test = () => {
@@ -22,7 +22,7 @@ const Test = () => {
   };
 
   return (
-    <div className="homepage-container">
+    <div >
      
       <nav className="navbar">
         

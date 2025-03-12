@@ -8,8 +8,11 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore"; // Firestore functions
+import { db } from "../firebase"; // Firestore database instance
 import "../Login.css"; 
 import { Loader2 } from "lucide-react"; 
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,28 +22,50 @@ const Login = () => {
 
   // Google Sign-in
   const handleGoogleSignIn = async () => {
-    setLoading(true); // Show loader
+    setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const userData = {
-        email: result.user.email,
-        uid: result.user.uid, // Firebase UID
-      };
-
-      await axios.post("http://127.0.0.1:5000/check", userData);
-      navigate("/home"); // Redirect after success
+      const user = result.user;
+      
+      // Reference to Firestore
+      const userRef = doc(db, "users", user.email);
+      const userSnap = await getDoc(userRef);
+  
+      let userData;
+      
+      if (!userSnap.exists()) {
+        // If new user, save default values
+        userData = {
+          name: user.displayName || "",
+          email: user.email,
+          phone: "",
+          gender: "",
+          age: "",
+          profilePhoto: user.photoURL || "",
+        };
+  
+        await setDoc(userRef, userData);
+      } else {
+        // If user exists, fetch existing data
+        userData = userSnap.data();
+      }
+  
+      // Store in Local Storage
+      localStorage.setItem("user", JSON.stringify(userData));
+  
+      navigate("/home"); 
     } catch (error) {
       console.error("Google Login Error:", error);
       alert(error.message);
     } finally {
-      setLoading(false); // Hide loader
+      setLoading(false);
     }
   };
 
   // Email Sign-in / Sign-up
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
-    setLoading(true); // Show loader
+    setLoading(true);
     try {
       let userCredential;
       if (isNewUser) {
@@ -51,18 +76,24 @@ const Login = () => {
         alert(`Welcome back, ${userCredential.user.email}!`);
       }
 
-      const userData = {
+      // Save user data in localStorage
+      const userProfile = {
+        name: "", // User can update later
         email: userCredential.user.email,
-        uid: userCredential.user.uid, // Firebase UID
+        profilePhoto: "", // No photo from email login
+        phone: "",
+        age: "",
+        gender: "",
       };
+      localStorage.setItem("user", JSON.stringify(userProfile));
 
-      await axios.post("http://127.0.0.1:5000/check", userData);
+      await axios.post("http://127.0.0.1:5000/check", { email: userCredential.user.email, uid: userCredential.user.uid });
       navigate("/home");
     } catch (error) {
       console.error("Auth Error:", error.message);
       alert(error.message);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -80,7 +111,6 @@ const Login = () => {
     }
   };
 
-  // 🚀 Loader Screen
   if (loading) {
     return (
       <div className="loading-container">
