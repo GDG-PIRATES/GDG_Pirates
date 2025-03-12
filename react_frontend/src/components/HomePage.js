@@ -66,17 +66,18 @@ const HomePage = () => {
     const fetchHealthNews = async () => {
       try {
         const response = await fetch(
-          `https://newsapi.org/v2/everything?q=health&sortBy=publishedAt&apiKey=4c433e67ee2e4e4d8babf8c5253fe3df`
+          
+"https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=78cd149b38d54c17b2bd74efe6e381c0"
         );
         const data = await response.json();
-        setArticles(data.articles.slice(0, 10)); // Get only 10 articles
+        setArticles(data.articles.slice(0, 20)); 
       } catch (error) {
         console.error("Error fetching news:", error);
       }
     };
 
     fetchHealthNews();
-  }, []); 
+  }, []);
 
   return (
     <div className="homepage-container">
@@ -134,13 +135,13 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-       {/* Health Articles Section */}
-       <div className="articles-container">
+      {/* Health Articles Section */}
+      <div className="articles-container">
         <h2 className="articles-heading">Latest Health News</h2>
         <div className="articles-scroll">
           {articles.map((article, index) => (
             <div key={index} className="article-box">
-              <img src={article.urlToImage} alt="Article" className="article-image"/>
+              <img src={article.urlToImage} alt="Article" className="article-image" />
               <h3>{article.title}</h3>
               <p>{article.description}</p>
               <a href={article.url} target="_blank" rel="noopener noreferrer">

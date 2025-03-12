@@ -186,8 +186,12 @@ body.dark-mode .test-box {
 }
 
 .test-dropdown {
-  flex-grow: 1;
-  overflow: auto; 
+  overflow: auto;
+  align-items: center;
+  justify-content: center; 
+  display: flex;
+  flex-direction: column;
+  width:100%;
 }
 
 .previous-tests {
@@ -409,4 +413,100 @@ body.dark-mode .test-box {
 
 .article-box a:hover {
   background: var(--button-hover-bg);
+}
+
+
+.test-card {
+  background: linear-gradient(135deg, #007bff, #00d4ff);
+  padding: 20px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  width: 90%;
+  max-width: 400px;
+  margin: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.test-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0.4;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.test-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 25px rgba(208, 255, 0, 0.3);
+  .test-card {
+  background: linear-gradient(135deg, #007bff, #00d4ff);
+  padding: 20px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  width: 90%;
+  max-width: 400px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle Glow Effect */
+.test-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0.4;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.test-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 25px rgba(0, 123, 255, 0.3);
+}
+
+/* Typography Improvements */
+.test-card h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.test-card p {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+}
+
+.test-card h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.test-card p {
+  font-size: 16px;
+  opacity: 0.9;
 }

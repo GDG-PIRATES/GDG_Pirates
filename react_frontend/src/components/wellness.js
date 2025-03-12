@@ -6,8 +6,8 @@ import '../Home.css'; // Import the CSS file
 const Wellness = () => {
   const [query, setQuery] = useState("");
   const [foods, setFoods] = useState([]);
-  const APP_ID = "d097a8e4"; // Replace with your Nutritionix App ID
-  const API_KEY = "52a655d9ef0e9c169e348d972e5f228d"; // Replace with your Nutritionix API Key
+  const APP_ID = "d097a8e4"; 
+  const API_KEY = "52a655d9ef0e9c169e348d972e5f228d"; 
 
   const fetchNutritionData = async () => {
     if (!query) return;
@@ -26,7 +26,7 @@ const Wellness = () => {
       setFoods(response.data.foods);
     } catch (error) {
       console.error("Error fetching data:", error);
-      alert("Could not fetch nutrition data. Check API keys.");
+      alert("Such food items does not exist in our database. Please try again.");
     }
   };
 

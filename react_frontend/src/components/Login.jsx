@@ -8,7 +8,8 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import "../Login.css"; 
+import "../Login.css";
+import "../App.css";
 import { Loader2 } from "lucide-react"; 
 const Login = () => {
   const [email, setEmail] = useState("");

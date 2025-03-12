@@ -11,6 +11,8 @@ import PredictionResult from "./components/PredictionResult";
 import Profile from "./components/Profile";
 import Wellness from "./components/wellness";
 import { AuthProvider } from "./context/AuthContext";
+import '../src/App.css';
+import '../src/Login.css';
 
 const ProtectedRoute = ({ children }) => {
   const [user, loading] = useAuthState(auth);

@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../predictForm.css";
 import { auth } from "../firebase";
+import '../Home.css';
+import '../App.css';
+import '../predictForm.css';
+import '../result.css';
+
 
 const DiabetesPredictionForm = () => {
   const [formData, setFormData] = useState({
@@ -52,7 +57,7 @@ const DiabetesPredictionForm = () => {
     e.preventDefault();
 
     try {
-      const user = auth.currentUser; // Get logged-in user
+      const user = auth.currentUser; 
       if (!user) {
         alert("User not logged in! Please log in again.");
         return;
