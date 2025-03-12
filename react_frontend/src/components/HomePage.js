@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { db } from "../firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "../Home.css";
-
-
 
 const HomePage = () => {
   const [user] = useAuthState(auth);
@@ -13,6 +13,7 @@ const HomePage = () => {
     localStorage.getItem("darkMode") === "enabled"
   );
   const [previousResults, setPreviousResults] = useState([]);
+  const [tests, setTests] = useState([]); // Firestore tests
 
   useEffect(() => {
     // Retrieve previous test results from localStorage
@@ -29,11 +30,30 @@ const HomePage = () => {
     }
   }, [darkMode]);
 
+  useEffect(() => {
+    if (!user) return;
+
+    async function fetchPreviousTests() {
+      try {
+        const q = query(collection(db, "PreviousTests"), where("Email_ID", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        const testsList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTests(testsList);
+      } catch (error) {
+        console.error("Error fetching tests:", error);
+      }
+    }
+
+    fetchPreviousTests();
+  }, [user]); // Runs when user state changes
+
   const toggleDarkMode = () => {
     setDarkMode((prevMode) => !prevMode);
   };
 
-  // Function to clear previous test results
   const clearResults = () => {
     localStorage.removeItem("previousResults"); // Remove stored results
     setPreviousResults([]); // Clear state
@@ -42,7 +62,6 @@ const HomePage = () => {
 
   return (
     <div className="homepage-container">
-      {/* Navbar */}
       <nav className="navbar">
         <h2 className={darkMode ? "dark-mode-text" : ""}>DetectX</h2>
         <ul>
@@ -83,35 +102,18 @@ const HomePage = () => {
         <div className="previous-tests">
           <div className="headd">Previous Test Results</div>
           <div className="test-dropdown">
-            {previousResults.length > 0 ? (
-              previousResults.map((result, index) => (
-                <div key={index} className="prev">
-                  {result.testName}: {result.result.toFixed(2)}%
+            {tests.length > 0 ? (
+              tests.map((test) => (
+                <div key={test.id} className="test-card">
+                  <strong>{test.Test_Name}</strong> - {test.Prediction_Percentage.toFixed(2)}%
+                  <br />
+                  <small>{test.Date_Time}</small>
                 </div>
               ))
             ) : (
-              <div className="prev">No previous results</div>
+              <div>No previous tests found</div>
             )}
           </div>
-
-          {previousResults.length > 0 && (
-            <button 
-              onClick={clearResults} 
-              style={{
-                backgroundColor: "red", 
-                color: "white", 
-                border: "none", 
-                padding: "10px 15px", 
-                cursor: "pointer", 
-                marginTop: "10px",
-                fontWeight:"700",
-                fontFamily:"Poppins"
-
-              }}
-            >
-              Clear Previous Results
-            </button>
-          )}
         </div>
       </div>
     </div>

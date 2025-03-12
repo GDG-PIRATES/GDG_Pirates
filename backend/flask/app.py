@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)
 
 cred = credentials.Certificate(
-    "C:/Users/HP/OneDrive/Documents/GitHub/ALL-PROJECTS/GDG Project All Files/GDG_Pirates/backend/flask/firebaseCred.json"
+    "R:/Mini Projects/GDG_Pirates/backend/flask/firebaseCred.json"
 )
 firebase_admin.initialize_app(cred)
 db = firestore.client()
@@ -33,9 +33,6 @@ def store_in_firestore(emailID, testName, date, prediction):
         print("=" * 30)
 
 
-userData = None
-
-
 @app.route("/check", methods=["POST"])
 def login():
     userData = request.get_json()  # Get JSON userData from React
@@ -51,7 +48,7 @@ def login():
 
 # Load trained model
 model = xgb.Booster()
-model.load_model("C:/Users/HP/OneDrive/Documents/GitHub/ALL-PROJECTS/GDG Project All Files/GDG_Pirates/backend/models/diabetes_model .json")
+model.load_model("R:/Mini Projects/GDG_Pirates/backend/models/diabetes_model .json")
 FEATURES = [
     "A1Cresult_>8",
     "A1Cresult_Norm",
