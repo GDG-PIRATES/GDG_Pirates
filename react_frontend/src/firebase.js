@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-
+import { getAuth, GoogleAuthProvider} from "firebase/auth";
+import { getStorage } from "firebase/storage";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBsKEgiUIH7368u-VJ_JtzTsHbWfu5fFzU",
@@ -15,43 +16,45 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider =new GoogleAuthProvider();
+
 // Function to set up reCAPTCHA
 // 
-const setUpRecaptcha = async (phoneNumber) => {
-  try {
-    console.log("Initializing reCAPTCHA...");
+// const setUpRecaptcha = async (phoneNumber) => {
+//   try {
+//     console.log("Initializing reCAPTCHA...");
 
-    // Clear any previous reCAPTCHA instance
-    if (window.recaptchaVerifier) {
-      window.recaptchaVerifier.clear();
-      window.recaptchaVerifier = null;
-    }
+//     // Clear any previous reCAPTCHA instance
+//     if (window.recaptchaVerifier) {
+//       window.recaptchaVerifier.clear();
+//       window.recaptchaVerifier = null;
+//     }
 
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-      size: "invisible",
-      callback: (response) => {
-        console.log("reCAPTCHA verified:", response);
-      },
-      "expired-callback": () => {
-        console.warn("reCAPTCHA expired! Refreshing...");
-        window.recaptchaVerifier = null;
-      },
-    });
+//     window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+//       size: "invisible",
+//       callback: (response) => {
+//         console.log("reCAPTCHA verified:", response);
+//       },
+//       "expired-callback": () => {
+//         console.warn("reCAPTCHA expired! Refreshing...");
+//         window.recaptchaVerifier = null;
+//       },
+//     });
 
-    const appVerifier = window.recaptchaVerifier;
+//     const appVerifier = window.recaptchaVerifier;
 
-    console.log("Sending OTP to:", phoneNumber);
-    const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+//     console.log("Sending OTP to:", phoneNumber);
+//     const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
 
-    console.log("OTP sent successfully!", confirmationResult);
-    alert("OTP Sent!");
-    return confirmationResult;
+//     console.log("OTP sent successfully!", confirmationResult);
+//     alert("OTP Sent!");
+//     return confirmationResult;
 
-  } catch (error) {
-    console.error("Error sending OTP:", error);
-    alert('Failed to send OTP: ${error.message}');
-  }
-};
+//   } catch (error) {
+//     console.error("Error sending OTP:", error);
+//     alert('Failed to send OTP: ${error.message}');
+//   }
+// };
 
-
-export { auth, googleProvider, setUpRecaptcha };
+const db = getFirestore(app);
+const storage = getStorage(app);
+export { auth, googleProvider, db, storage, doc, setDoc, getDoc };

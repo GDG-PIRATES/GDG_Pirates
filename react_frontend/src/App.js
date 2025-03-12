@@ -10,7 +10,8 @@ import loading from "./components/GoogleLoginRedirect";
 import GoogleLoginRedirect from "./components/GoogleLoginRedirect";
 import DiabetesPredictionForm from "./components/GetDetailsForDiabetesPrediction";
 import PredictionResult from "./components/PredictionResult";
-
+import Profile from "./components/Profile";
+import Wellness from "./components/wellness";
 
 const ProtectedRoute = ({ children }) => {
   const [user, loading] = useAuthState(auth);
@@ -33,6 +34,8 @@ const App = () => {
         <Route path="/test" element={<ProtectedRoute><Test /></ProtectedRoute>}/>
         <Route path="/prediction" element={<ProtectedRoute><DiabetesPredictionForm /></ProtectedRoute>}/>
         <Route path="/result" element={<ProtectedRoute><PredictionResult/></ProtectedRoute>}/>
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>}/>
+        <Route path="/wellness" element={<ProtectedRoute><Wellness /></ProtectedRoute>}/>
       </Routes>
     </Router>
   );
