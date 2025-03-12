@@ -8,12 +8,9 @@ import Test from "./components/Test";
 import GoogleLoginRedirect from "./components/GoogleLoginRedirect";
 import DiabetesPredictionForm from "./components/GetDetailsForDiabetesPrediction";
 import PredictionResult from "./components/PredictionResult";
-<<<<<<< HEAD
 import Profile from "./components/Profile";
 import Wellness from "./components/wellness";
-=======
-import { AuthProvider } from "./context/AuthContext"; // Ensure this file exists
->>>>>>> a921349179894e92e03885ee69b349922c9a7416
+import { AuthProvider } from "./context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
   const [user, loading] = useAuthState(auth);
@@ -27,21 +24,6 @@ const ProtectedRoute = ({ children }) => {
 
 const App = () => {
   return (
-<<<<<<< HEAD
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        
-        <Route path="/loading" element={<GoogleLoginRedirect />} />
-        <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path="/test" element={<ProtectedRoute><Test /></ProtectedRoute>}/>
-        <Route path="/prediction" element={<ProtectedRoute><DiabetesPredictionForm /></ProtectedRoute>}/>
-        <Route path="/result" element={<ProtectedRoute><PredictionResult/></ProtectedRoute>}/>
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>}/>
-        <Route path="/wellness" element={<ProtectedRoute><Wellness /></ProtectedRoute>}/>
-      </Routes>
-    </Router>
-=======
     <AuthProvider> {/* Wrap everything inside AuthProvider */}
       <Router>
         <Routes>
@@ -51,10 +33,11 @@ const App = () => {
           <Route path="/test" element={<ProtectedRoute><Test /></ProtectedRoute>} />
           <Route path="/prediction" element={<ProtectedRoute><DiabetesPredictionForm /></ProtectedRoute>} />
           <Route path="/result" element={<ProtectedRoute><PredictionResult/></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>}/>
+          <Route path="/wellness" element={<ProtectedRoute><Wellness /></ProtectedRoute>}/>
         </Routes>
       </Router>
     </AuthProvider>
->>>>>>> a921349179894e92e03885ee69b349922c9a7416
   );
 };
 

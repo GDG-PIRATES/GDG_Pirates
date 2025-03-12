@@ -48,7 +48,7 @@ def login():
 
 # Load trained model
 model = xgb.Booster()
-model.load_model("R:/Mini Projects/GDG_Pirates/backend/models/diabetes_model .json")
+model.load_model("R:/Mini Projects/GDG_Pirates/backend/models/diabetes_model.json")
 
 FEATURES = [
     "A1Cresult_>8",
