@@ -1,76 +1,23 @@
 import { initializeApp } from "firebase/app";
-<<<<<<< HEAD
-import { getAuth, GoogleAuthProvider} from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
-=======
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
 
->>>>>>> a921349179894e92e03885ee69b349922c9a7416
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBsKEgiUIH7368u-VJ_JtzTsHbWfu5fFzU",
   authDomain: "loginapp-9176b.firebaseapp.com",
   projectId: "loginapp-9176b",
-  storageBucket: "loginapp-9176b.appspot.app",
+  storageBucket: "loginapp-9176b.appspot.com",
   messagingSenderId: "418353873931",
   appId: "1:418353873931:web:9d1b4bfe2472d5febf730e",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-<<<<<<< HEAD
-const googleProvider =new GoogleAuthProvider();
-
-// Function to set up reCAPTCHA
-// 
-// const setUpRecaptcha = async (phoneNumber) => {
-//   try {
-//     console.log("Initializing reCAPTCHA...");
-
-//     // Clear any previous reCAPTCHA instance
-//     if (window.recaptchaVerifier) {
-//       window.recaptchaVerifier.clear();
-//       window.recaptchaVerifier = null;
-//     }
-
-//     window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-//       size: "invisible",
-//       callback: (response) => {
-//         console.log("reCAPTCHA verified:", response);
-//       },
-//       "expired-callback": () => {
-//         console.warn("reCAPTCHA expired! Refreshing...");
-//         window.recaptchaVerifier = null;
-//       },
-//     });
-
-//     const appVerifier = window.recaptchaVerifier;
-
-//     console.log("Sending OTP to:", phoneNumber);
-//     const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-
-//     console.log("OTP sent successfully!", confirmationResult);
-//     alert("OTP Sent!");
-//     return confirmationResult;
-
-//   } catch (error) {
-//     console.error("Error sending OTP:", error);
-//     alert('Failed to send OTP: ${error.message}');
-//   }
-// };
-
+const googleProvider = new GoogleAuthProvider();
 const db = getFirestore(app);
 const storage = getStorage(app);
-export { auth, googleProvider, db, storage, doc, setDoc, getDoc };
-=======
-const googleProvider = new GoogleAuthProvider();
-const db = getFirestore(app); // ✅ Initialize Firestore
 
-<<<<<<< HEAD
-export { auth, googleProvider, db };
-=======
-export { auth, googleProvider };
->>>>>>> a921349179894e92e03885ee69b349922c9a7416
->>>>>>> fad17a336ccc1633657824b1952dea9d18767324
+export { auth, googleProvider, db, storage, doc, setDoc, getDoc };
