@@ -1,3 +1,4 @@
+import os
 import firebase_admin
 from datetime import datetime
 from flask import Flask, jsonify, request
@@ -9,9 +10,11 @@ from firebase_admin import credentials, firestore
 app = Flask(__name__)
 CORS(app)
 
-cred = credentials.Certificate(
-    "C:/Users/HP/OneDrive/Documents/GitHub/ALL-PROJECTS/GDG Project All Files/GDG_Pirates/backend/flask/firebaseCred.json"
-)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+cred_path = os.path.join(BASE_DIR, "firebaseCred.json")
+
+cred = credentials.Certificate(cred_path)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -27,10 +30,7 @@ def store_in_firestore(emailID, testName, date, prediction):
             "Prediction_Percentage": prediction,
         }
     )
-    if not doc_ref:
-        print("=" * 30)
-        print("Some error occured in storing")
-        print("=" * 30)
+    
 
 
 @app.route("/check", methods=["POST"])
@@ -46,9 +46,10 @@ def login():
     return jsonify({"error": "Invalid data"}), 400
 
 
-# Load trained model
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+model_path = os.path.join(BASE_DIR, "models", "diabetes_model.json")
 model = xgb.Booster()
-model.load_model("C:/Users/HP/OneDrive/Documents/GitHub/ALL-PROJECTS/GDG Project All Files/GDG_Pirates/backend/models/diabetes_model.json")
+model.load_model(model_path)
 
 FEATURES = [
     "A1Cresult_>8",

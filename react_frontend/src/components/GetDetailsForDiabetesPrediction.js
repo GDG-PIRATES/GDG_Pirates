@@ -80,56 +80,31 @@ const DiabetesPredictionForm = () => {
     <div className="container">
       <h2>Diabetes Prediction</h2>
       <form onSubmit={handleSubmit}>
-        {[
-          {
-            key: "A1Cresult_8",
-            label: "Enter 1 if HbA1C Level greater than 8% else 0",
-          },
-          { key: "A1Cresult_Norm", label: "A1C Result (Normal=1, Abnormal=0)" },
-          {
-            key: "max_glu_serum_300",
-            label: "Enter 1 if Glucose Serum is greater than 300 mg/dL else 0",
-          },
-          {
-            key: "max_glu_serum_Norm",
-            label: "Max Glucose Serum (Normal=1, Abnormal=0)",
-          },
-          {
-            key: "num_medications",
-            label:
-              "Number of Medications Taken for Diabetes or related conditions",
-          },
-          {
-            key: "num_lab_procedures",
-            label: "Number of Lab Procedures undergone recently",
-          },
-          {
-            key: "number_inpatient",
-            label: "Number of Times admitted to Hospital for care",
-          },
-          { key: "age", label: "Age (Years)" },
-          {
-            key: "time_in_hospital",
-            label: "Time Spent in Hospital (Days) during last admission",
-          },
-          {
-            key: "number_diagnoses",
-            label:
-              "Number of Health conditions Diagnosed (Hypertension, Heart Disease)",
-          },
-        ].map(({ key, label }) => (
-          <div key={key}>
-            <label>{label}:</label>
-            <input
-              type="number"
-              name={key}
-              value={formData[key]}
-              placeholder={`Enter ${label}`}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        ))}
+      {[
+  { key: "A1Cresult_8", label: "Enter 1 if HbA1C Level greater than 8% else 0" },
+  { key: "A1Cresult_Norm", label: "A1C Result (Normal=1, Abnormal=0)" },
+  { key: "max_glu_serum_300", label: "Enter 1 if Glucose Serum is greater than 300 mg/dL else 0" },
+  { key: "max_glu_serum_Norm", label: "Max Glucose Serum (Normal=1, Abnormal=0)" },
+  { key: "num_medications", label: "Number of Medications Taken for Diabetes or related conditions" },
+  { key: "num_lab_procedures", label: "Number of Lab Procedures undergone recently" },
+  { key: "number_inpatient", label: "Number of Times admitted to Hospital for care" },
+  { key: "age", label: "Age (Years)" },
+  { key: "time_in_hospital", label: "Time Spent in Hospital (Days) during last admission" },
+  { key: "number_diagnoses", label: "Number of Health conditions Diagnosed (Hypertension, Heart Disease)" },
+].map(({ key, label }) => (
+  <div key={key} className="input-group">
+    <label>{label}:</label>
+    <input
+      type="number"
+      name={key}
+      value={formData[key]}
+      placeholder={`Enter ${label}`}
+      onChange={handleChange}
+      required
+    />
+  </div>
+))}
+
         <button type="submit">Predict</button>
         <button onClick={() => navigate("/home")}>Go Back</button>
       </form>

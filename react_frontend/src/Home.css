@@ -510,3 +510,20 @@ body.dark-mode .test-box {
   font-size: 16px;
   opacity: 0.9;
 }
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.chatbot-icon {
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.3s ease;
+  color: white;
+}
+
+.chatbot-icon:hover {
+  transform: scale(1.1);
+  color: #a1d6e2;
+}

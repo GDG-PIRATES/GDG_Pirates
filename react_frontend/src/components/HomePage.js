@@ -5,7 +5,7 @@ import { auth } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "../Home.css";
-
+import { FaRobot } from "react-icons/fa";
 const HomePage = () => {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
@@ -59,6 +59,13 @@ const HomePage = () => {
     setPreviousResults([]); // Clear state
     alert("Previous results deleted!");
   };
+  const openChatbot = () => {
+    window.open(
+      "https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2025/03/13/10/20250313100155-AUO0PSSE.json",
+      "_blank"
+    );
+  };
+
   /*Health articles*/
   const [articles, setArticles] = useState([]); // Store health articles
 
@@ -85,20 +92,25 @@ const HomePage = () => {
 
   return (
     <div className="homepage-container">
-      <nav className="navbar">
-        <h2 className={darkMode ? "dark-mode-text" : ""}>DetectX</h2>
-        <ul>
-          <li><a href="/home">Home</a></li>
-          <li><a href="/wellness">Wellness Guide</a></li>
-          <li><a href="/profile">Profile</a></li>
-          <li><a href="#">About Us</a></li>
-        </ul>
+       <nav className="navbar">
+      <h2 className={darkMode ? "dark-mode-text" : ""}>DetectX</h2>
+      <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/wellness">Wellness Guide</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+      <div className="nav-icons">
+        <div className="chatbot-icon" onClick={openChatbot} title="Open Chatbot">
+          <FaRobot />
+        </div>
         <div className="toggle-container" onClick={toggleDarkMode}>
           <span className="icon">☀</span>
           <div className="toggle-circle"></div>
           <span className="icon">🌙</span>
         </div>
-      </nav>
+      </div>
+    </nav>
 
       {/* Welcome Section */}
       <div className="welcome-section">
