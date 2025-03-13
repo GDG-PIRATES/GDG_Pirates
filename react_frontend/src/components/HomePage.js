@@ -66,18 +66,22 @@ const HomePage = () => {
     const fetchHealthNews = async () => {
       try {
         const response = await fetch(
-          
-"https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=78cd149b38d54c17b2bd74efe6e381c0"
+          "https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=78cd149b38d54c17b2bd74efe6e381c0"
         );
         const data = await response.json();
-        setArticles(data.articles.slice(0, 20)); 
+          const filteredArticles = data.articles
+          .filter((article) => article.urlToImage) 
+          .slice(0, 20); 
+  
+        setArticles(filteredArticles);
       } catch (error) {
         console.error("Error fetching news:", error);
       }
     };
-
+  
     fetchHealthNews();
   }, []);
+  
 
   return (
     <div className="homepage-container">
