@@ -74,7 +74,7 @@ body.dark-mode {
   justify-content: center; 
   align-items: center; 
   background-color: var(--bg-color);
-  margin-top: 700px;
+  margin-top: 10px;
 }
 
 .welcome-section {
@@ -341,7 +341,9 @@ body.dark-mode .test-box {
 .dark-mode-text {
   color: white !important;
 }
-/*Health related articles CSS*/
+
+/* Health related articles CSS */
+
 .articles-container {
   width: 90%;
   margin: 50px auto;
