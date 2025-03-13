@@ -77,7 +77,7 @@ const DiabetesPredictionForm = () => {
   };
 
   return (
-    <div className="container">
+    <div className="diabetes-container">
       <h2>Diabetes Prediction</h2>
       <form onSubmit={handleSubmit}>
       {[
@@ -88,7 +88,7 @@ const DiabetesPredictionForm = () => {
   { key: "num_medications", label: "Number of Medications Taken for Diabetes or related conditions" },
   { key: "num_lab_procedures", label: "Number of Lab Procedures undergone recently" },
   { key: "number_inpatient", label: "Number of Times admitted to Hospital for care" },
-  { key: "age", label: "Age (Years)" },
+  { key: "age", label: "Age (Years)",class:"age" },
   { key: "time_in_hospital", label: "Time Spent in Hospital (Days) during last admission" },
   { key: "number_diagnoses", label: "Number of Health conditions Diagnosed (Hypertension, Heart Disease)" },
 ].map(({ key, label }) => (

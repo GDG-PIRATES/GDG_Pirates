@@ -10,18 +10,15 @@ import { FaRobot } from "react-icons/fa";
 const HomePage = () => {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("darkMode") === "enabled"
-  );
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "enabled");
   const [previousResults, setPreviousResults] = useState([]);
-  const [tests, setTests] = useState([]); // Firestore tests
+  const [tests, setTests] = useState([]);
+  const [chatbotOpen, setChatbotOpen] = useState(false); // Chatbot popup state
 
   useEffect(() => {
-    // Retrieve previous test results from localStorage
     const storedResults = JSON.parse(localStorage.getItem("previousResults")) || [];
     setPreviousResults(storedResults);
 
-    // Apply dark mode
     if (darkMode) {
       document.body.classList.add("dark-mode");
       localStorage.setItem("darkMode", "enabled");
@@ -49,69 +46,52 @@ const HomePage = () => {
     }
 
     fetchPreviousTests();
-  }, [user]); // Runs when user state changes
+  }, [user]);
 
   const toggleDarkMode = () => {
     setDarkMode((prevMode) => !prevMode);
   };
 
-  const clearResults = () => {
-    localStorage.removeItem("previousResults"); // Remove stored results
-    setPreviousResults([]); // Clear state
-    alert("Previous results deleted!");
+  const toggleChatbot = () => {
+    setChatbotOpen(!chatbotOpen);
   };
-  const openChatbot = () => {
-    window.open(
-      "https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2025/03/13/10/20250313100155-AUO0PSSE.json",
-      "_blank"
-    );
-  };
-
-  /*Health articles*/
-  const [articles, setArticles] = useState([]); // Store health articles
-
-  useEffect(() => {
-    const fetchHealthNews = async () => {
-      try {
-        const response = await fetch(
-          "https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=78cd149b38d54c17b2bd74efe6e381c0"
-        );
-        const data = await response.json();
-          const filteredArticles = data.articles
-          .filter((article) => article.urlToImage) 
-          .slice(0, 20); 
-  
-        setArticles(filteredArticles);
-      } catch (error) {
-        console.error("Error fetching news:", error);
-      }
-    };
-  
-    fetchHealthNews();
-  }, []);
-  
 
   return (
     <div className="homepage-container">
-       <nav className="navbar">
-      <h2 className={darkMode ? "dark-mode-text" : ""}>DetectX</h2>
-      <ul>
-        <li><a href="/home">Home</a></li>
-        <li><a href="/wellness">Wellness Guide</a></li>
-        <li><a href="/profile">Profile</a></li>
-        <li><a href="#">About Us</a></li>
-      </ul>
-      <div className="nav-icons">
-        <div className="chatbot-icon" onClick={openChatbot} title="Open Chatbot">
-          <FaRobot />
+      <nav className="navbar">
+        <h2 className={darkMode ? "dark-mode-text" : ""}>DetectX</h2>
+        <ul>
+          <li><a href="/home">Home</a></li>
+          <li><a href="/wellness">Wellness Guide</a></li>
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+        <div className="nav-icons">
+          <div className="chatbot-icon" onClick={toggleChatbot} title="Open Chatbot">
+            <FaRobot />
+          </div>
+          <div className="toggle-container" onClick={toggleDarkMode}>
+            <span className="icon">☀</span>
+            <div className="toggle-circle"></div>
+            <span className="icon">🌙</span>
+          </div>
         </div>
-        <div className="toggle-container" onClick={toggleDarkMode}>
-          <span className="icon">☀</span>
-          <div className="toggle-circle"></div>
-          <span className="icon">🌙</span>
+      </nav>
+
+      {/* Chatbot Popup */}
+      {chatbotOpen && (
+        <div className="chatbot-popup">
+          <div className="chatbot-header">
+            <span>AI Chatbot</span>
+            <button className="close-btn" onClick={toggleChatbot}>✖</button>
+          </div>
+          <iframe 
+            src="https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2025/03/13/10/20250313100155-AUO0PSSE.json"
+            title="Chatbot"
+            className="chatbot-iframe"
+          ></iframe>
         </div>
-      </div>
-    </nav>
+      )}
 
       {/* Welcome Section */}
       <div className="welcome-section">
@@ -150,22 +130,6 @@ const HomePage = () => {
               <div>No previous tests found</div>
             )}
           </div>
-        </div>
-      </div>
-      {/* Health Articles Section */}
-      <div className="articles-container">
-        <h2 className="articles-heading">Latest Health News</h2>
-        <div className="articles-scroll">
-          {articles.map((article, index) => (
-            <div key={index} className="article-box">
-              <img src={article.urlToImage} alt="Article" className="article-image" />
-              <h3>{article.title}</h3>
-              <p>{article.description}</p>
-              <a href={article.url} target="_blank" rel="noopener noreferrer">
-                Read More
-              </a>
-            </div>
-          ))}
         </div>
       </div>
     </div>
