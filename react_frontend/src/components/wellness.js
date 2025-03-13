@@ -42,7 +42,7 @@ const Wellness = () => {
         </ul>
        
       </nav>
-    <div className="container">
+    <div className="food-container">
       <h1>🥗 Nutrition Facts Finder</h1>
       <div className="search-box">
         <input

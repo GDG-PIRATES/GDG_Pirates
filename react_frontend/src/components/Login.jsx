@@ -9,8 +9,9 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import "../Login.css";
-import "../App.css";
+// import "../App.css";
 import { Loader2 } from "lucide-react"; 
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -98,8 +99,9 @@ const Login = () => {
 
         <form onSubmit={handleEmailSignIn}>
           <div className="input-group">
-            <label>Email</label>
+            <label className="lpage">Email</label>
             <input
+              className="lpage"
               type="email"
               placeholder="username@gmail.com"
               value={email}
@@ -109,9 +111,10 @@ const Login = () => {
           </div>
 
           <div className="input-group">
-            <label>Password</label>
+            <label className="lpage">Password</label>
             <input
               type="password"
+              className="lpage"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

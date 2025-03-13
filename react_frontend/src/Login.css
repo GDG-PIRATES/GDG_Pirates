@@ -51,6 +51,7 @@ body {
   
   .input-group label {
     font-weight: bold;
+    text-align: left;
     color: #333;
     margin-bottom: 4px;
     display: block;

@@ -92,7 +92,7 @@ const DiabetesPredictionForm = () => {
   { key: "time_in_hospital", label: "Time Spent in Hospital (Days) during last admission" },
   { key: "number_diagnoses", label: "Number of Health conditions Diagnosed (Hypertension, Heart Disease)" },
 ].map(({ key, label }) => (
-  <div key={key} className="input-group">
+  <div key={key} className="input-grp">
     <label>{label}:</label>
     <input
       type="number"

@@ -6,6 +6,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import "../Home.css";
 import { FaRobot } from "react-icons/fa";
+
 const HomePage = () => {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
