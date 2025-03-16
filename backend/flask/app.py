@@ -18,19 +18,40 @@ cred = credentials.Certificate(cred_path)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-collection_ref = db.collection("PreviousTests")
+PreviousTests_collection_ref = db.collection("PreviousTests")
+Diabetes_collection_ref = db.collection("Diabetes")
 
 
-def store_in_firestore(emailID, testName, date, prediction):
-    doc_ref = collection_ref.add(
+def store_tests_in_firestore(emailID, testName, date, prediction, testid):
+    doc_ref = PreviousTests_collection_ref.add(
         {
             "Email_ID": emailID,
+            "Test_ID": testid,
             "Test_Name": testName,
             "Date_Time": date,
             "Prediction_Percentage": prediction,
         }
     )
-    
+
+
+def store_diabetes_tests_in_firestore(data):
+    doc_ref = Diabetes_collection_ref.add(
+        {
+            "email_id": data.get("email"),
+            "A1Cresult_8": data.get("A1Cresult_8"),
+            "A1Cresult_Norm": data.get("A1Cresult_Norm"),
+            "max_glu_serum_300": data.get("max_glu_serum_300"),
+            "max_glu_serum_Norm": data.get("max_glu_serum_Norm"),
+            "num_medications": data.get("num_medications"),
+            "num_lab_procedures": data.get("num_lab_procedures"),
+            "number_inpatient": data.get("number_inpatient"),
+            "age": data.get("age"),
+            "time_in_hospital": data.get("time_in_hospital"),
+            "number_diagnoses": data.get("number_diagnoses"),
+        }
+    )
+
+    return doc_ref[1].id
 
 
 @app.route("/check", methods=["POST"])
@@ -76,6 +97,10 @@ def predict():
         print("Received data:", data)  # Debugging log (will show in terminal)
         email = data.get("email")
 
+        print("=" * 76)
+        print(data)
+        print("=" * 76)
+
         # Convert input data into DataFrame
         input_df = pd.DataFrame([data], columns=FEATURES)
         print("Converted DataFrame:", input_df)  # Debugging log
@@ -86,11 +111,12 @@ def predict():
         # Make prediction
         prediction = model.predict(dmatrix)
 
-        store_in_firestore(
+        store_tests_in_firestore(
             email,
             "diabetes",
             datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             float(prediction[0] * 100),
+            store_diabetes_tests_in_firestore(data),
         )
 
         # Return prediction as JSON response
