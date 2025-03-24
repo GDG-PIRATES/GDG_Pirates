@@ -1,36 +1,33 @@
-
-/* --------- Upload Section Styling ---------- */
 .reportAnalysis-container {
     background: rgba(255, 255, 255, 0.1);
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
-    width: 100%;
     text-align: center;
-    position: relative;
-    margin-top: 20px;
+    width: 100%;
+    margin-top: 100px;
+    max-width: 500px;
     backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* --------- Upload Box Styling ---------- */
 .upload-container {
-    border-radius: 12px;
     padding: 25px;
+    border-radius: 12px;
     margin-bottom: 20px;
-    transition: all 0.3s ease-in-out;
 }
 
-/* File Info */
-.file-info {
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
+.upload-icon {
+    font-size: 50px;
+    color: #38bdf8;
+    margin-bottom: 10px;
 }
 
-/* --------- Input Field ---------- */
+.tex {
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .inp {
     width: 100%;
     padding: 12px;
@@ -48,7 +45,32 @@
     box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
 }
 
-/* --------- Modern Neumorphic Button ---------- */
+.inp::file-selector-button {
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.inp::file-selector-button:hover {
+    background: linear-gradient(to right, #0072ff, #00c6ff);
+    transform: scale(1.05);
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 14px;
+    color:white;
+    font-weight: 400px;
+}
+
 .button {
     background: linear-gradient(145deg, #1e40af, #1e3a8a);
     color: white;
@@ -58,12 +80,16 @@
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
-    width: 90%;
+    width: 85%;
     transition: all 0.3s ease-in-out;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+}
+
+.tex{
+    color: #b7ff00;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bolder;
+    
 }
 
 .button:hover {
@@ -77,49 +103,69 @@
     cursor: not-allowed;
 }
 
-/* Fix Button Alignment */
-.button-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
+.download-section {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+}
+.download-section h4 {
+    font-size: 18px;
+    color: #b7ff00;
+}
+.download-btn {
+    display: inline-block;
+    text-decoration: none;
+    background: linear-gradient(145deg, #00c6ff, #0072ff);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: all 0.3s ease-in-out;
 }
 
-/* --------- Information Section ---------- */
+.download-btn:hover {
+    background: linear-gradient(145deg, #0072ff, #00c6ff);
+    transform: scale(1.05);
+}
+
+.error-message {
+    color: #ff0404;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bolder;
+}
+
 .info-section {
     margin-top: 20px;
     padding: 15px;
     background: rgba(255, 255, 255, 0.1);
-    width: 400px;
     text-align: center;
     border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 30px;
 }
 
 .info-section h3 {
-    margin: 0;
     font-size: 18px;
-    color: #cbd5e1;
+    color: #00ffd0;
 }
 
 .info-section p {
     font-size: 14px;
-    color: #94a3b8;
+    color: #42ff5e;
 }
 
-.inp::file-selector-button {
-    background: linear-gradient(to right, #00c6ff, #0072ff);
-    border: none;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .inp::file-selector-button:hover {
-    background: linear-gradient(to right, #0072ff, #00c6ff);
-    transform: scale(1.05);
-  }
+@media (max-width: 600px) {
+    .reportAnalysis-container {
+        width: 95%;
+        padding: 20px;
+    }
+    .button {
+        font-size: 14px;
+    }
+}
