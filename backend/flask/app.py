@@ -1,25 +1,75 @@
 import os
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
+import firebase_admin
+import xgboost as xgb
+import pandas as pd
+from firebase_admin import credentials, firestore
 import pytesseract
 import PyPDF2
 from PIL import Image
-import fitz 
-import google.generativeai as genai 
+from datetime import datetime
+import fitz
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])  
+CORS(app, origins=["http://localhost:3000"])
 
-GENAI_API_KEY = os.getenv("GOOGLE_API_KEY")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+cred_path = os.path.join(BASE_DIR, "firebaseCred.json")
+
+cred = credentials.Certificate(cred_path)
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+PreviousTests_collection_ref = db.collection("PreviousTests")
+Diabetes_collection_ref = db.collection("Diabetes")
+
+GENAI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GENAI_API_KEY:
     raise ValueError("GOOGLE_API_KEY is missing. Set it before running.")
-
 genai.configure(api_key=GENAI_API_KEY)
 
 UPLOAD_FOLDER = "uploads"
 PROCESSED_FOLDER = "processed_reports"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
+
+
+def store_tests_in_firestore(emailID, testName, date, prediction, testid):
+    doc_ref = PreviousTests_collection_ref.add(
+        {
+            "Email_ID": emailID,
+            "Test_ID": testid,
+            "Test_Name": testName,
+            "Date_Time": date,
+            "Prediction_Percentage": prediction,
+        }
+    )
+
+
+def store_diabetes_tests_in_firestore(data):
+    doc_ref = Diabetes_collection_ref.add(
+        {
+            "email_id": data.get("email"),
+            "A1Cresult_8": data.get("A1Cresult_8"),
+            "A1Cresult_Norm": data.get("A1Cresult_Norm"),
+            "max_glu_serum_300": data.get("max_glu_serum_300"),
+            "max_glu_serum_Norm": data.get("max_glu_serum_Norm"),
+            "num_medications": data.get("num_medications"),
+            "num_lab_procedures": data.get("num_lab_procedures"),
+            "number_inpatient": data.get("number_inpatient"),
+            "age": data.get("age"),
+            "time_in_hospital": data.get("time_in_hospital"),
+            "number_diagnoses": data.get("number_diagnoses"),
+        }
+    )
+
+    return doc_ref[1].id
 
 
 def extract_text_from_pdf(pdf_path):
@@ -30,7 +80,7 @@ def extract_text_from_pdf(pdf_path):
             for page in reader.pages:
                 page_text = page.extract_text()
                 if page_text:
-                    text += page_text + "\n\n"  
+                    text += page_text + "\n\n"
     except Exception as e:
         print("Error extracting PDF text:", e)
     return text.strip()
@@ -49,7 +99,7 @@ def extract_text_from_image(image_path):
 def analyze_text_with_gemini(text):
     try:
         model = genai.GenerativeModel("gemini-1.5-pro-latest")
-        
+
         prompt = f"""
         Given the following report text, summarize it and provide key findings in simple language so that 
         the patient can easily understand his health condition. The summary should fit within 3/4 of an A4 page 
@@ -73,41 +123,38 @@ def analyze_text_with_gemini(text):
         return "AI analysis failed."
 
 
-
-
 def generate_pdf_report(ai_insights, output_pdf_path):
     try:
-        page_width, page_height = 595, 842  
-        margin_x, margin_y = 50, 50 
-        max_width = page_width - (2 * margin_x)  
+        page_width, page_height = 595, 842
+        margin_x, margin_y = 50, 50
+        max_width = page_width - (2 * margin_x)
 
         font_size = 12
-        line_spacing = 16  
-        section_spacing = 20  
-        bullet_spacing = 12  
+        line_spacing = 16
+        section_spacing = 20
+        bullet_spacing = 12
 
         if not ai_insights.strip():
             ai_insights = "No insights available."
 
-
-        sections = ai_insights.split("\n")  
+        sections = ai_insights.split("\n")
         doc = fitz.open()
-        current_y = margin_y  
-        page = doc.new_page(width=page_width, height=page_height)  
+        current_y = margin_y
+        page = doc.new_page(width=page_width, height=page_height)
 
-        font = fitz.Font("helv")  
+        font = fitz.Font("helv")
 
         for section in sections:
             section = section.strip()
             if not section:
-                continue  
+                continue
 
             if "**" in section and not section.startswith("•"):
                 text = section.replace("**", "").strip()
-                fontsize = font_size + 2  
+                fontsize = font_size + 2
                 line_gap = section_spacing
             elif section.startswith("* "):
-                text = "• " + section[2:].strip()  
+                text = "• " + section[2:].strip()
                 fontsize = font_size
                 line_gap = bullet_spacing
             else:
@@ -120,12 +167,12 @@ def generate_pdf_report(ai_insights, output_pdf_path):
 
             for word in words:
                 test_line = current_line + " " + word if current_line else word
-                text_width = font.text_length(test_line, fontsize)  
+                text_width = font.text_length(test_line, fontsize)
                 if text_width < max_width:
                     current_line = test_line
                 else:
                     wrapped_text.append(current_line)
-                    current_line = word  
+                    current_line = word
 
             if current_line:
                 wrapped_text.append(current_line)
@@ -133,8 +180,10 @@ def generate_pdf_report(ai_insights, output_pdf_path):
             for line in wrapped_text:
                 if current_y + fontsize + 4 > page_height - margin_y:
                     page = doc.new_page(width=page_width, height=page_height)
-                    current_y = margin_y 
-                text_rect = fitz.Rect(margin_x, current_y, margin_x + max_width, page_height - margin_y)
+                    current_y = margin_y
+                text_rect = fitz.Rect(
+                    margin_x, current_y, margin_x + max_width, page_height - margin_y
+                )
 
                 page.insert_textbox(
                     text_rect,
@@ -142,7 +191,7 @@ def generate_pdf_report(ai_insights, output_pdf_path):
                     fontsize=fontsize,
                     fontname="helv",
                     color=(0, 0, 0),
-                    align=0  
+                    align=0,
                 )
                 current_y += fontsize + 4
 
@@ -154,7 +203,79 @@ def generate_pdf_report(ai_insights, output_pdf_path):
         print("Error generating PDF report:", e)
 
 
-@app.route("/upload", methods=["POST"])
+@app.route("/check", methods=["POST"])
+def login():
+    userData = request.get_json()  # Get JSON userData from React
+    email = userData.get("email")
+    uid = userData.get("uid")
+
+    if email and uid:
+        print(f"User logged in: {email}, UID: {uid}")
+        return jsonify({"message": "Login data received", "email": email, "uid": uid})
+
+    return jsonify({"error": "Invalid data"}), 400
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+model_path = os.path.join(BASE_DIR, "models", "diabetes_model.json")
+model = xgb.Booster()
+model.load_model(model_path)
+
+FEATURES = [
+    "A1Cresult_>8",
+    "A1Cresult_Norm",
+    "max_glu_serum_>300",
+    "max_glu_serum_Norm",
+    "num_medications",
+    "num_lab_procedures",
+    "number_inpatient",
+    "age",
+    "time_in_hospital",
+    "number_diagnoses",
+]
+
+
+@app.route("/predictDiabetes", methods=["POST", "GET"])
+def predict():
+    if request.content_type != "application/json":
+        return jsonify({"error": "Content-Type must be application/json"}), 415
+
+    try:
+        # Get JSON data from request
+        data = request.get_json()
+        print("Received data:", data)  # Debugging log (will show in terminal)
+        email = data.get("email")
+
+        print("=" * 76)
+        print(data)
+        print("=" * 76)
+
+        # Convert input data into DataFrame
+        input_df = pd.DataFrame([data], columns=FEATURES)
+        print("Converted DataFrame:", input_df)  # Debugging log
+
+        # Convert DataFrame to DMatrix for XGBoost
+        dmatrix = xgb.DMatrix(input_df)
+
+        # Make prediction
+        prediction = model.predict(dmatrix)
+
+        store_tests_in_firestore(
+            email,
+            "diabetes",
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            float(prediction[0] * 100),
+            store_diabetes_tests_in_firestore(data),
+        )
+
+        # Return prediction as JSON response
+        return jsonify({"prediction": float(prediction[0] * 100)})
+
+    except Exception as e:
+        print("Error:", str(e))  # Debugging log
+
+
+@app.route("/ReportUpload", methods=["POST"])
 def upload_file():
     if "file" not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
