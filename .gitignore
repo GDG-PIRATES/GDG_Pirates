@@ -1,3 +1,6 @@
 venv/
 *.dll
 .env
+
+backend/flask/processed_reports
+backend/flask/uploads
