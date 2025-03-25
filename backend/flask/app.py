@@ -101,73 +101,111 @@ def analyze_text_with_gemini(text):
         model = genai.GenerativeModel("gemini-1.5-pro-latest")
 
         prompt = f"""
-        Given the following report text, summarize it and provide key findings in simple language so that 
-        the patient can easily understand his health condition. The summary should fit within 3/4 of an A4 page 
-        and be formatted clearly with:
-        - Patient's name and details at the top
-        - Key findings in bullet points
-        - Simple, readable language
-        - A recommendation section at the end
-        - Avoid unnecessary medical jargon
-        
-        {text}
-        """
+You are an AI that simplifies complex medical reports into clear, patient-friendly summaries.  
+Your task is to analyze the following report and generate an easy-to-understand summary that includes:  
+
+- **Patient Information:** Display the patient's name and basic details at the top.  
+- **Key Findings:** Present the important results in bullet points using simple language.  
+- **Explanation:** Briefly describe what each finding means for the patient's health.  
+- **Recommendations:** Provide clear next steps, such as lifestyle changes or when to consult a doctor.  
+- **Clarity:** Avoid unnecessary medical jargon and ensure the summary is concise and within ¾ of an A4 page.  
+
+**Medical Report:**  
+{text}  
+"""
+
         response = model.generate_content(prompt)
+        print("==" * 34)
+        print(response)
+        print("==" * 34)
 
         if response and hasattr(response, "text"):
             return response.text.strip()
         else:
             return "No insights available."
+
     except Exception as e:
         print("Error with Gemini API:", e)
         return "AI analysis failed."
 
 
+
 def generate_pdf_report(ai_insights, output_pdf_path):
     try:
-        page_width, page_height = 595, 842
+        # Page and margin settings
+        page_width, page_height = 595, 842  # A4 size in points
         margin_x, margin_y = 50, 50
         max_width = page_width - (2 * margin_x)
 
-        font_size = 12
+        # Font and spacing settings
+        title_font_size = 16
+        section_font_size = 14
+        content_font_size = 12
+        bullet_font_size = 12
         line_spacing = 16
-        section_spacing = 20
-        bullet_spacing = 12
+        section_spacing = 25
+        bullet_spacing = 14
 
         if not ai_insights.strip():
             ai_insights = "No insights available."
 
+        # Split the response into sections based on the parts
         sections = ai_insights.split("\n")
         doc = fitz.open()
         current_y = margin_y
         page = doc.new_page(width=page_width, height=page_height)
 
-        font = fitz.Font("helv")
+        # Define fonts
+        title_font = "helv-bold"
+        section_font = "helv-bold"
+        content_font = "helv"
 
+        # Add report title at the top
+        title = "Medical Report Summary"
+        title_rect = fitz.Rect(
+            margin_x, current_y, margin_x + max_width, page_height - margin_y
+        )
+        page.insert_textbox(
+            title_rect,
+            title,
+            fontsize=title_font_size,
+            fontname=title_font,
+            color=(0, 0, 0),
+            align=1,
+        )
+        current_y += title_font_size + section_spacing
+
+        # Extracting sections from the response
         for section in sections:
             section = section.strip()
             if not section:
                 continue
 
+            # Format headers (bold and slightly larger)
             if "**" in section and not section.startswith("•"):
                 text = section.replace("**", "").strip()
-                fontsize = font_size + 2
+                fontsize = section_font_size
+                fontname = section_font
                 line_gap = section_spacing
-            elif section.startswith("* "):
+            elif section.startswith("* "):  # Bullet points
                 text = "• " + section[2:].strip()
-                fontsize = font_size
+                fontsize = bullet_font_size
+                fontname = content_font
                 line_gap = bullet_spacing
-            else:
+            else:  # Normal text
                 text = section
-                fontsize = font_size
+                fontsize = content_font_size
+                fontname = content_font
                 line_gap = line_spacing
+
+            # Word wrapping
             wrapped_text = []
             words = text.split()
             current_line = ""
 
             for word in words:
                 test_line = current_line + " " + word if current_line else word
-                text_width = font.text_length(test_line, fontsize)
+                text_width = fitz.get_text_length(test_line, fontsize, fontname)
                 if text_width < max_width:
                     current_line = test_line
                 else:
@@ -177,19 +215,20 @@ def generate_pdf_report(ai_insights, output_pdf_path):
             if current_line:
                 wrapped_text.append(current_line)
 
+            # Insert text into PDF
             for line in wrapped_text:
                 if current_y + fontsize + 4 > page_height - margin_y:
                     page = doc.new_page(width=page_width, height=page_height)
                     current_y = margin_y
+
                 text_rect = fitz.Rect(
                     margin_x, current_y, margin_x + max_width, page_height - margin_y
                 )
-
                 page.insert_textbox(
                     text_rect,
                     line,
                     fontsize=fontsize,
-                    fontname="helv",
+                    fontname=fontname,
                     color=(0, 0, 0),
                     align=0,
                 )
@@ -197,8 +236,10 @@ def generate_pdf_report(ai_insights, output_pdf_path):
 
             current_y += line_gap
 
+        # Save the generated PDF to the given path
         doc.save(output_pdf_path)
         doc.close()
+
     except Exception as e:
         print("Error generating PDF report:", e)
 
