@@ -115,9 +115,6 @@ Your task is to analyze the following report and generate an easy-to-understand 
 """
 
         response = model.generate_content(prompt)
-        print("==" * 34)
-        print(response)
-        print("==" * 34)
 
         if response and hasattr(response, "text"):
             return response.text.strip()
@@ -132,80 +129,49 @@ Your task is to analyze the following report and generate an easy-to-understand 
 
 def generate_pdf_report(ai_insights, output_pdf_path):
     try:
-        # Page and margin settings
-        page_width, page_height = 595, 842  # A4 size in points
+        page_width, page_height = 595, 842
         margin_x, margin_y = 50, 50
         max_width = page_width - (2 * margin_x)
 
-        # Font and spacing settings
-        title_font_size = 16
-        section_font_size = 14
-        content_font_size = 12
-        bullet_font_size = 12
-        line_spacing = 16
-        section_spacing = 25
-        bullet_spacing = 14
+        font_size = 12
+        line_spacing = 15
+        section_spacing = 20
+        bullet_spacing = 12
 
         if not ai_insights.strip():
             ai_insights = "No insights available."
 
-        # Split the response into sections based on the parts
         sections = ai_insights.split("\n")
         doc = fitz.open()
         current_y = margin_y
         page = doc.new_page(width=page_width, height=page_height)
 
-        # Define fonts
-        title_font = "helv-bold"
-        section_font = "helv-bold"
-        content_font = "helv"
+        font = fitz.Font("helv")
 
-        # Add report title at the top
-        title = "Medical Report Summary"
-        title_rect = fitz.Rect(
-            margin_x, current_y, margin_x + max_width, page_height - margin_y
-        )
-        page.insert_textbox(
-            title_rect,
-            title,
-            fontsize=title_font_size,
-            fontname=title_font,
-            color=(0, 0, 0),
-            align=1,
-        )
-        current_y += title_font_size + section_spacing
-
-        # Extracting sections from the response
         for section in sections:
             section = section.strip()
             if not section:
                 continue
 
-            # Format headers (bold and slightly larger)
-            if "**" in section and not section.startswith("•"):
-                text = section.replace("**", "").strip()
-                fontsize = section_font_size
-                fontname = section_font
+            if "" in section and not section.startswith("•"):
+                text = section.replace("", "").strip()
+                fontsize = font_size + 2
                 line_gap = section_spacing
-            elif section.startswith("* "):  # Bullet points
+            elif section.startswith("* "):
                 text = "• " + section[2:].strip()
-                fontsize = bullet_font_size
-                fontname = content_font
+                fontsize = font_size
                 line_gap = bullet_spacing
-            else:  # Normal text
+            else:
                 text = section
-                fontsize = content_font_size
-                fontname = content_font
+                fontsize = font_size
                 line_gap = line_spacing
-
-            # Word wrapping
             wrapped_text = []
             words = text.split()
             current_line = ""
 
             for word in words:
                 test_line = current_line + " " + word if current_line else word
-                text_width = fitz.get_text_length(test_line, fontsize, fontname)
+                text_width = font.text_length(test_line, fontsize)
                 if text_width < max_width:
                     current_line = test_line
                 else:
@@ -215,20 +181,19 @@ def generate_pdf_report(ai_insights, output_pdf_path):
             if current_line:
                 wrapped_text.append(current_line)
 
-            # Insert text into PDF
             for line in wrapped_text:
                 if current_y + fontsize + 4 > page_height - margin_y:
                     page = doc.new_page(width=page_width, height=page_height)
                     current_y = margin_y
-
                 text_rect = fitz.Rect(
                     margin_x, current_y, margin_x + max_width, page_height - margin_y
                 )
+
                 page.insert_textbox(
                     text_rect,
                     line,
                     fontsize=fontsize,
-                    fontname=fontname,
+                    fontname="helv",
                     color=(0, 0, 0),
                     align=0,
                 )
@@ -236,13 +201,10 @@ def generate_pdf_report(ai_insights, output_pdf_path):
 
             current_y += line_gap
 
-        # Save the generated PDF to the given path
         doc.save(output_pdf_path)
         doc.close()
-
     except Exception as e:
         print("Error generating PDF report:", e)
-
 
 @app.route("/check", methods=["POST"])
 def login():
@@ -282,23 +244,18 @@ def predict():
         return jsonify({"error": "Content-Type must be application/json"}), 415
 
     try:
-        # Get JSON data from request
         data = request.get_json()
-        print("Received data:", data)  # Debugging log (will show in terminal)
+        print("Received data:", data) 
         email = data.get("email")
 
         print("=" * 76)
         print(data)
         print("=" * 76)
 
-        # Convert input data into DataFrame
         input_df = pd.DataFrame([data], columns=FEATURES)
-        print("Converted DataFrame:", input_df)  # Debugging log
 
-        # Convert DataFrame to DMatrix for XGBoost
         dmatrix = xgb.DMatrix(input_df)
 
-        # Make prediction
         prediction = model.predict(dmatrix)
 
         store_tests_in_firestore(
@@ -309,11 +266,10 @@ def predict():
             store_diabetes_tests_in_firestore(data),
         )
 
-        # Return prediction as JSON response
         return jsonify({"prediction": float(prediction[0] * 100)})
 
     except Exception as e:
-        print("Error:", str(e))  # Debugging log
+        print("Error:", str(e)) 
 
 
 @app.route("/ReportUpload", methods=["POST"])
