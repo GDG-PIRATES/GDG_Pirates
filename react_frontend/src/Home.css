@@ -352,7 +352,7 @@ body.dark-mode .test-box {
 }
 
 .dark-mode-text {
-  color: white !important;
+  color: rgb(255, 255, 255) !important;
 }
 
 /* Health related articles CSS */
