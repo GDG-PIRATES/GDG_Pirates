@@ -14,7 +14,7 @@ import Wellness from "./components/wellness";
 import { AuthProvider } from "./context/AuthContext";
 import '../src/App.css';
 import '../src/Login.css';
-
+import UnderMaintenance from "./components/UnderMaintenance";
 const ProtectedRoute = ({ children }) => {
   const [user, loading] = useAuthState(auth);
 
@@ -30,6 +30,7 @@ const App = () => {
     <AuthProvider> {/* Wrap everything inside AuthProvider */}
       <Router>
         <Routes>
+          <Route path="/underMaintenance" element={<UnderMaintenance />} />
           <Route path="/" element={<Login />} />
           <Route path="/loading" element={<GoogleLoginRedirect />} />
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />

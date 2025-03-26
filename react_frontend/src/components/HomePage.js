@@ -101,6 +101,9 @@ const HomePage = () => {
           <li>
             <a href="#">About Us</a>
           </li>
+          <li>
+            <a href="/">Logout</a>
+          </li>
         </ul>
         <div className="nav-icons">
           <div
@@ -146,8 +149,8 @@ const HomePage = () => {
           {[
             { name: "Diabetes", route: "/prediction" },
             { name: "Report Analysis", route: "/reportAnalysis" },
-            { name: "Blood Pressure", route: "/test" },
-            { name: "Cancer Detection", route: "/test" },
+            { name: "Blood Pressure", route: "/underMaintenance" },
+            { name: "Cancer Detection", route: "/underMaintenance" },
           ].map((test, index) => (
             <div
               key={index}
