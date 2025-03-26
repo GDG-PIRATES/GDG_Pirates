@@ -1,3 +1,4 @@
+/* Container Styling */
 .diabetes-container {
   background: white;
   padding: 30px;
@@ -9,6 +10,7 @@
   font-family: "Arial", sans-serif;
 }
 
+/* Heading */
 h2 {
   text-align: center;
   color: #333;
@@ -16,23 +18,30 @@ h2 {
   margin-bottom: 20px;
 }
 
+/* Form layout */
 form {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
+/* Input group */
 .input-grp {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
+/* Labels */
 label {
   font-weight: bold;
-  color: #444;
-  margin-bottom: 5px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+/* Input fields */
 input {
   padding: 10px;
   border: 1px solid #ccc;
@@ -47,7 +56,7 @@ input:focus {
   box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.3);
 }
 
-/* Styling for the radio buttons */
+/* Radio buttons */
 .radio-group {
   display: flex;
   gap: 15px;
@@ -88,12 +97,37 @@ button:active {
   transform: translateY(0);
 }
 
-#back:last-child {
-  background-color: #007bff;
+/* Go Back button */
+#back {
+  background-color: #6c757d;
 }
 
-#back:last-child:hover {
-  background-color: #0056b3;
+#back:hover {
+  background-color: #545b62;
+}
+
+/* Tooltip Container */
+.relative {
+  position: relative;
+}
+
+/* Tooltip Icon */
+.text-blue-500 {
+  color: #007bff;
+}
+
+/* Tooltip Box */
+.absolute {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #007bff;
+  border-radius: 6px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  font-size: 12px;
+  color: #333;
+  padding: 8px;
+  max-width: 250px;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 100;
 }
 
 /* Responsive Design */

@@ -144,10 +144,10 @@ const HomePage = () => {
       <div className="main-content">
         <div className="tests-container">
           {[
-            { name: "Cancer Detection", route: "/test" },
             { name: "Diabetes", route: "/prediction" },
-            { name: "Blood Pressure", route: "/test" },
             { name: "Report Analysis", route: "/reportAnalysis" },
+            { name: "Blood Pressure", route: "/test" },
+            { name: "Cancer Detection", route: "/test" },
           ].map((test, index) => (
             <div
               key={index}

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../predictForm.css";
+import { Info } from "lucide-react";
 import { auth } from "../firebase";
-import '../Home.css';
-import '../App.css';
-import '../predictForm.css';
-import '../result.css';
+import "../predictForm.css";
+import "../Home.css";
+import "../App.css";
+import "../result.css";
 
 const DiabetesPredictionForm = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +23,7 @@ const DiabetesPredictionForm = () => {
   });
 
   const navigate = useNavigate();
+  const [tooltip, setTooltip] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,11 +36,9 @@ const DiabetesPredictionForm = () => {
       }
     }
 
-    if (["age"].includes(name)) {
-      if (newValue <= 0) {
-        alert("Kindly enter a valid age.");
-        newValue = "";
-      }
+    if (name === "age" && newValue <= 0) {
+      alert("Kindly enter a valid age.");
+      newValue = "";
     }
 
     setFormData({ ...formData, [name]: newValue });
@@ -49,7 +48,7 @@ const DiabetesPredictionForm = () => {
     e.preventDefault();
 
     try {
-      const user = auth.currentUser; 
+      const user = auth.currentUser;
       if (!user) {
         alert("User not logged in! Please log in again.");
         return;
@@ -65,25 +64,42 @@ const DiabetesPredictionForm = () => {
     }
   };
 
+  const tooltips = {
+    A1Cresult_8: "Shows if your average blood sugar (HbA1C) is higher than 8%. (0 = No, 1 = Yes)",
+    A1Cresult_Norm: "Shows if your average blood sugar (HbA1C) is at a normal level. (0 = No, 1 = Yes)",
+    max_glu_serum_300: "Shows if your blood sugar level was ever above 300 mg/dL. (0 = No, 1 = Yes)",
+    max_glu_serum_Norm: "Shows if your blood sugar level is within the normal range. (0 = No, 1 = Yes)",
+    num_medications: "How many different diabetes-related medicines you are taking.",
+    num_lab_procedures: "Total number of lab tests you've had recently.",
+    number_inpatient: "How many times you've been admitted to a hospital.",
+    age: "Your age in years.",
+    time_in_hospital: "How many days you stayed in the hospital during your last visit.",
+    number_diagnoses: "Total number of health conditions you have been diagnosed with (e.g., high blood pressure, heart disease).",
+  };
+  
+
   return (
     <div className="diabetes-container">
       <h2>Diabetes Prediction</h2>
       <form onSubmit={handleSubmit}>
-        {[
-          { key: "A1Cresult_8", label: "HbA1C Level greater than 8%", type: "boolean" },
-          { key: "A1Cresult_Norm", label: "A1C Result (Normal=Yes, Abnormal=No)", type: "boolean" },
-          { key: "max_glu_serum_300", label: "Glucose Serum greater than 300 mg/dL", type: "boolean" },
-          { key: "max_glu_serum_Norm", label: "Max Glucose Serum (Normal=Yes, Abnormal=No)", type: "boolean" },
-          { key: "num_medications", label: "Number of Medications Taken for Diabetes or related conditions", type: "number" },
-          { key: "num_lab_procedures", label: "Number of Lab Procedures undergone recently", type: "number" },
-          { key: "number_inpatient", label: "Number of Times admitted to Hospital for care", type: "number" },
-          { key: "age", label: "Age (Years)", type: "number" },
-          { key: "time_in_hospital", label: "Time Spent in Hospital (Days) during last admission", type: "number" },
-          { key: "number_diagnoses", label: "Number of Health conditions Diagnosed (Hypertension, Heart Disease)", type: "number" },
-        ].map(({ key, label, type }) => (
+        {Object.entries(tooltips).map(([key, label]) => (
           <div key={key} className="input-grp">
-            <label>{label}:</label>
-            {type === "boolean" ? (
+            <label className="flex items-center gap-2">
+              {label}
+              <div
+                className="relative flex items-center"
+                onMouseEnter={() => setTooltip(key)}
+                onMouseLeave={() => setTooltip(null)}
+              >
+                <Info className="w-5 h-5 text-blue-500 cursor-pointer" />
+                {tooltip === key && (
+                  <div className="absolute left-6 top-0 bg-white shadow-md border rounded p-2 text-sm w-56">
+                    {tooltips[key]}
+                  </div>
+                )}
+              </div>
+            </label>
+            {["A1Cresult_8", "A1Cresult_Norm", "max_glu_serum_300", "max_glu_serum_Norm"].includes(key) ? (
               <div className="radio-group">
                 <label>
                   <input
@@ -121,7 +137,7 @@ const DiabetesPredictionForm = () => {
           </div>
         ))}
         <button type="submit">Predict</button>
-        <button id ="back" type="button" onClick={() => navigate("/home")}>Go Back</button>
+        <button id="back" type="button" onClick={() => navigate("/home")}>Go Back</button>
       </form>
     </div>
   );
