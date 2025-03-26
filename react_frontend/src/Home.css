@@ -1,13 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
-html, body {
+html,
+body {
   min-height: 100vh;
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -36,7 +37,7 @@ body.dark-mode {
   top: 0;
   left: 0;
   width: 100%;
-  height: 70px; 
+  height: 70px;
   background-color: var(--navbar-bg);
   color: white;
   display: flex;
@@ -50,7 +51,7 @@ body.dark-mode {
 .navbar ul {
   list-style: none;
   display: flex;
-  gap: 25px; 
+  gap: 25px;
 }
 
 .navbar ul li a {
@@ -68,11 +69,11 @@ body.dark-mode {
 .homepage-container {
   width: 100vw;
   min-height: 100vh;
-  padding-top: 100px; 
+  padding-top: 100px;
   display: flex;
-  flex-direction: column; 
-  justify-content: center; 
-  align-items: center; 
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: var(--bg-color);
   margin-top: 10px;
 }
@@ -81,28 +82,28 @@ body.dark-mode {
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
 .welcome-section h1 {
-  font-size: 36px; 
+  font-size: 36px;
   font-weight: bold;
   color: var(--text-color);
 }
 
 .cancer-detection-container {
   margin-top: 20px;
-  max-width: 450px; 
-  padding: 30px; 
+  max-width: 450px;
+  padding: 30px;
   background: var(--card-bg);
   color: var(--text-color);
-  border-radius: 12px; 
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
 .cancer-detection-container h2 {
-  font-size: 28px; 
+  font-size: 28px;
   color: var(--navbar-bg);
 }
 
@@ -110,12 +111,12 @@ body.dark-mode {
 .detect-btn {
   background-color: var(--button-bg);
   color: white;
-  padding: 15px 25px; 
+  padding: 15px 25px;
   border: none;
-  border-radius: 10px; 
+  border-radius: 10px;
   cursor: pointer;
   margin-top: 20px;
-  font-size: 20px; 
+  font-size: 20px;
   font-weight: bold;
   transition: all 0.3s ease;
 }
@@ -135,17 +136,17 @@ body.dark-mode {
 }
 
 .feature-box {
-  width: 350px; 
-  padding: 25px; 
+  width: 350px;
+  padding: 25px;
   background: var(--card-bg);
   color: var(--text-color);
-  border-radius: 12px; 
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
 .feature-box h2 {
-  font-size: 24px; 
+  font-size: 24px;
   color: var(--navbar-bg);
 }
 
@@ -159,19 +160,19 @@ body.dark-mode {
 
 .tests-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 30px; 
-  max-width: 700px; 
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  max-width: 700px;
 }
 
 .test-box {
   background-color: var(--card-bg);
-  padding: 25px; 
+  padding: 25px;
   text-align: center;
-  border-radius: 12px; 
+  border-radius: 12px;
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-  font-size: 20px; 
+  font-size: 20px;
   transition: 0.3s;
   color: #000; /* Default black text */
 }
@@ -186,34 +187,51 @@ body.dark-mode .test-box {
 }
 
 .test-dropdown {
-  overflow-y: auto;
+  max-height: 350px; /* Adjust this as needed */
+  overflow-y: auto; /* Enable vertical scrolling */
+  justify-items: center;
   align-items: center;
-  justify-content: center; 
   display: flex;
-  flex-direction: column;
-  width:100%;
+  flex-direction: column; /* Stack items vertically */
+  gap: 15px; /* More space between test cards */
+  padding-right: 10px; /* Prevent scrollbar overlap */
+  scrollbar-width: none;
 }
 
 .test-dropdown::-webkit-scrollbar {
-  width: 6px;
+  display: none;
 }
 
 .test-dropdown::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 4px;
+  display: none;
 }
 
-.test-dropdown::-webkit-scrollbar-track {
-  background: #ddd;
+.test-card {
+  background-color: var(--card-bg, #fff); /* Fallback color */
+  padding: 20px; /* More padding */
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 18px; /* Slightly bigger text */
+  min-height: 80px; /* Increased height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center text */
+  transition: transform 0.3s ease-in-out;
 }
+
+.test-card:hover {
+  transform: scale(1.05);
+}
+
 
 .previous-tests {
-  width: 600px; 
+  width: 600px;
   height: 500px;
-  padding: 40px; 
+  padding: 40px;
   background-color: var(--card-bg);
-  border-radius: 12px; 
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); 
+  border-radius: 12px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -221,10 +239,10 @@ body.dark-mode .test-box {
 
 .prev {
   font-size: 24px;
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); 
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
   padding: 20px;
-  z-index: 1; 
+  z-index: 1;
 }
 
 .headd {
@@ -235,7 +253,7 @@ body.dark-mode .test-box {
 }
 
 .previous-tests h2 {
-  font-size: 24px; 
+  font-size: 24px;
 }
 
 @media (max-width: 1024px) {
@@ -245,7 +263,7 @@ body.dark-mode .test-box {
   }
 
   .tests-container {
-    grid-template-columns: repeat(1, 1fr); 
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .previous-tests {
@@ -430,7 +448,6 @@ body.dark-mode .test-box {
   background: var(--button-hover-bg);
 }
 
-
 .test-card {
   background: linear-gradient(135deg, #007bff, #00d4ff);
   padding: 20px;
@@ -465,54 +482,53 @@ body.dark-mode .test-box {
   transform: translateY(-5px);
   box-shadow: 0px 10px 25px rgba(208, 255, 0, 0.3);
   .test-card {
-  background: linear-gradient(135deg, #007bff, #00d4ff);
-  padding: 20px;
-  text-align: center;
-  border-radius: 12px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
-  font-size: 18px;
-  font-weight: bold;
-  color: #fff;
-  border: none;
-  transition: all 0.3s ease-in-out;
-  width: 90%;
-  max-width: 400px;
-  margin: auto;
-  position: relative;
-  overflow: hidden;
-}
+    background: linear-gradient(135deg, #007bff, #00d4ff);
+    padding: 20px;
+    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+  }
 
-/* Subtle Glow Effect */
-.test-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), transparent);
-  opacity: 0.4;
-  transition: opacity 0.3s ease-in-out;
-}
+  /* Subtle Glow Effect */
+  .test-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0.4;
+    transition: opacity 0.3s ease-in-out;
+  }
 
-/* Hover Effect */
-.test-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 10px 25px rgba(0, 123, 255, 0.3);
-}
+  /* Hover Effect */
+  .test-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 25px rgba(0, 123, 255, 0.3);
+  }
 
-/* Typography Improvements */
-.test-card h3 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
+  /* Typography Improvements */
+  .test-card h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
 
-.test-card p {
-  font-size: 16px;
-  opacity: 0.9;
-}
-
+  .test-card p {
+    font-size: 16px;
+    opacity: 0.9;
+  }
 }
 
 .test-card h3 {
@@ -542,7 +558,6 @@ body.dark-mode .test-box {
   transform: scale(1.1);
   color: #4eceeb;
 }
-
 
 .chatbot-popup {
   position: fixed;
