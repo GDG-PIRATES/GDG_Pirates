@@ -186,12 +186,25 @@ body.dark-mode .test-box {
 }
 
 .test-dropdown {
-  overflow: auto;
+  overflow-y: auto;
   align-items: center;
   justify-content: center; 
   display: flex;
   flex-direction: column;
   width:100%;
+}
+
+.test-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.test-dropdown::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.test-dropdown::-webkit-scrollbar-track {
+  background: #ddd;
 }
 
 .previous-tests {

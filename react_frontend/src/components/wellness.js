@@ -33,7 +33,7 @@ const Wellness = () => {
   return (
     <div>
     <nav className="navbar">
-        <h2 >Wellness Guide</h2>
+        <h2 >DetectX</h2>
         <ul>
           <li><a href="/home">Home</a></li>
           <li><a href="/wellness">Wellness Guide</a></li>
