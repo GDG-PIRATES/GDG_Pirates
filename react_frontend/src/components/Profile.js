@@ -1,74 +1,152 @@
-import React, { useState, useEffect } from "react";
-import { db } from "../firebase"; 
-import { doc, setDoc} from "firebase/firestore"; 
+import React, { useEffect, useState } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import "../profile.css";
+
 const Profile = () => {
-  const [user, setUser] = useState(null);
-  const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("");
+  const auth = getAuth();
+  const db = getFirestore();
+  const [userData, setUserData] = useState({
+    email: "",
+    displayName: "",
+    phoneNumber: "",
+    age: "",
+    gender: "",
+  });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setPhone(parsedUser.phone || "");
-      setGender(parsedUser.gender || "");
-    }
-  }, []);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+
+      const userRef = doc(db, "profiles", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        setUserData(userSnap.data());
+      } else {
+        await setDoc(userRef, {
+          email: user.email || "",
+          displayName: user.displayName || "",
+          phoneNumber: "",
+          age: "",
+          gender: "",
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   const handleUpdate = async () => {
-    if (!user || !user.uid) {
-      alert("User not found. Please log in again.");
+    if (!auth.currentUser) return;
+
+    if (
+      !userData.phoneNumber.trim() ||
+      !userData.gender.trim() ||
+      !userData.age.trim()
+    ) {
+      alert("⚠️ Please fill in both Phone Number and Gender before updating!");
       return;
     }
-  
-    const updatedData = { ...user, phone, gender };
-  
+
     try {
-      // Use setDoc with merge to create the document if it doesn't exist
-      const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, { phone, gender }, { merge: true });
-  
-      // Update local state & storage
-      setUser(updatedData);
-      localStorage.setItem("user", JSON.stringify(updatedData));
-  
-      alert("Profile updated successfully!");
+      const userRef = doc(db, "profiles", auth.currentUser.uid);
+      await updateDoc(userRef, {
+        phoneNumber: userData.phoneNumber,
+        age: userData.age,
+        gender: userData.gender,
+      });
+
+      alert("✅ Profile Updated Successfully!");
     } catch (error) {
-      console.error("Profile Update Error:", error);
-      alert("Failed to update profile. Please try again.");
+      alert("❌ Error updating profile: " + error.message);
     }
   };
 
-  return user ? (
-    <div>
-    <nav className="navbar">
-        <h2 >Wellness Guide</h2>
+  return (
+    <div className="profile-page">
+      <nav className="navbar">
+        <h2>DetectX</h2>
         <ul>
-          <li><a href="/home">Home</a></li>
-          <li><a href="/wellness">Wellness Guide</a></li>
-          <li><a href="/profile">Profile</a></li>
-          <li><a href="#">About Us</a></li>
+          <li>
+            <a href="/home">Home</a>
+          </li>
+          <li>
+            <a href="/wellness">Wellness Guide</a>
+          </li>
+          <li>
+            <a href="/profile">Profile</a>
+          </li>
+          <li>
+            <a href="#">About Us</a>
+          </li>
         </ul>
-       
       </nav>
-    <div  className="profile-container">
-      <h1>Profile</h1>
-      <p><strong>Name:</strong> {user.name}</p>
-      <p><strong>Email:</strong> {user.email}</p>
-      
-      <label><strong>Phone:</strong></label>
-      <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
+      <div className="profileback1">
+        <h2>Profile Page</h2>
+        <p>
+          <strong>Name:</strong>
+          <br></br>
+          {userData.displayName}
+        </p>
+        <p>
+          <strong>Email:</strong> <br></br>
+          {userData.email}
+        </p>
 
-      <label><strong>Gender:</strong></label>
-      <input type="text" value={gender} onChange={(e) => setGender(e.target.value)} />
+        <label htmlFor="phone">Phone Number:</label>
+        <input
+          id="phone"
+          type="tel"
+          placeholder="Enter your phone number"
+          value={userData.phoneNumber}
+          onChange={(e) =>
+            setUserData({ ...userData, phoneNumber: e.target.value })
+          }
+          onInput={(e) =>
+            (e.target.value = e.target.value.replace(/[^0-9+]/g, ""))
+          }
+          pattern="^\+?[0-9\s-]{7,15}$"
+          maxLength="15"
+          autoComplete="tel"
+          required
+        />
 
-      <button onClick={handleUpdate}>Update Profile</button>
+        <label htmlFor="age">Age: </label>
+        <input
+          id="id"
+          type="number"
+          placeholder="Enter your age"
+          min="0"
+          max="100"
+          value={userData.age}
+          onChange={(e) => setUserData({ ...userData, age: e.target.value })}
+          required
+        />
+
+        <label htmlFor="gender">Gender: </label>
+        <select
+          id="gender"
+          value={userData.gender}
+          onChange={(e) => setUserData({ ...userData, gender: e.target.value })}
+          required
+        >
+          <option value="" disabled>
+            Select
+          </option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+
+        <button onClick={handleUpdate}>Update Profile</button>
+      </div>
     </div>
-    </div>
-  ) : (
-    <p>Loading...</p>
   );
 };
 
