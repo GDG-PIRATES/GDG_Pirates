@@ -1,5 +1,6 @@
+import base64
 import os
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, json, request, jsonify, send_file
 from flask_cors import CORS
 import firebase_admin
 import xgboost as xgb
@@ -16,26 +17,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["https://detectxhealth.netlify.app"])
+CORS(app, origins=["http://localhost:3000"])
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-cred = credentials.Certificate(
-    {
-        "type": "service_account",
-        "project_id": os.getenv("FIREBASE_PROJECT_ID"),
-        "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
-        "private_key": os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n"),
-        "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
-        "client_id": os.getenv("FIREBASE_CLIENT_ID"),
-        "auth_uri": os.getenv("FIREBASE_AUTH_URI"),
-        "token_uri": os.getenv("FIREBASE_TOKEN_URI"),
-        "auth_provider_x509_cert_url": os.getenv(
-            "FIREBASE_AUTH_PROVIDER_X509_CERT_URL"
-        ),
-        "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL"),
-    }
-)
 
+firebase_cred_base64 = os.getenv("FIREBASE_CRED_BASE64")
+if not firebase_cred_base64:
+    raise ValueError("Firebase credentials not found in environment variables")
+firebase_cred_json = base64.b64decode(firebase_cred_base64).decode("utf-8")
+firebase_cred_dict = json.loads(firebase_cred_json)
+
+cred = credentials.Certificate(firebase_cred_dict)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -54,19 +46,15 @@ os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
 
 def store_tests_in_firestore(emailID, testName, date, prediction, testid):
-    try:
-        doc_ref = PreviousTests_collection_ref.add(
-            {
-                "Email_ID": emailID,
-                "Test_ID": testid,
-                "Test_Name": testName,
-                "Date_Time": date,
-                "Prediction_Percentage": prediction,
-            }
-        )
-        print(f"Stored test in Firestore with ID: {doc_ref.id}")  # Optional debug log
-    except Exception as e:
-        print("Error storing test in Firestore:", e)
+    doc_ref = PreviousTests_collection_ref.add(
+        {
+            "Email_ID": emailID,
+            "Test_ID": testid,
+            "Test_Name": testName,
+            "Date_Time": date,
+            "Prediction_Percentage": prediction,
+        }
+    )
 
 
 def store_diabetes_tests_in_firestore(data):
@@ -118,26 +106,23 @@ def analyze_text_with_gemini(text):
         model = genai.GenerativeModel("gemini-1.5-pro-latest")
 
         prompt = f"""
-You are an AI that simplifies complex medical reports into clear, patient-friendly summaries.  
-Your task is to analyze the following report and generate an easy-to-understand summary that includes:  
-
-- **Patient Information:** Display the patient's name and basic details at the top.  
-- **Key Findings:** Present the important results in bullet points using simple language.  
-- **Explanation:** Briefly describe what each finding means for the patient's health.  
-- **Recommendations:** Provide clear next steps, such as lifestyle changes or when to consult a doctor.  
-- **Clarity:** Avoid unnecessary medical jargon and ensure the summary is concise and within ¾ of an A4 page.  
-
-**Medical Report:**  
-{text}  
-"""
-
+        Given the following report text, summarize it and provide key findings in simple language so that 
+        the patient can easily understand his health condition. The summary should fit within 3/4 of an A4 page 
+        and be formatted clearly with:
+        - Patient's name and details at the top
+        - Key findings in bullet points
+        - Simple, readable language
+        - A recommendation section at the end
+        - Avoid unnecessary medical jargon
+        
+        {text}
+        """
         response = model.generate_content(prompt)
 
         if response and hasattr(response, "text"):
             return response.text.strip()
         else:
             return "No insights available."
-
     except Exception as e:
         print("Error with Gemini API:", e)
         return "AI analysis failed."
@@ -150,7 +135,7 @@ def generate_pdf_report(ai_insights, output_pdf_path):
         max_width = page_width - (2 * margin_x)
 
         font_size = 12
-        line_spacing = 15
+        line_spacing = 16
         section_spacing = 20
         bullet_spacing = 12
 
@@ -169,8 +154,8 @@ def generate_pdf_report(ai_insights, output_pdf_path):
             if not section:
                 continue
 
-            if "" in section and not section.startswith("•"):
-                text = section.replace("", "").strip()
+            if "**" in section and not section.startswith("•"):
+                text = section.replace("**", "").strip()
                 fontsize = font_size + 2
                 line_gap = section_spacing
             elif section.startswith("* "):
@@ -222,10 +207,6 @@ def generate_pdf_report(ai_insights, output_pdf_path):
     except Exception as e:
         print("Error generating PDF report:", e)
 
-@app.route("/")
-def page():
-    return "<h1> This Just the backend</h1>"
-
 
 @app.route("/check", methods=["POST"])
 def login():
@@ -265,18 +246,23 @@ def predict():
         return jsonify({"error": "Content-Type must be application/json"}), 415
 
     try:
+        # Get JSON data from request
         data = request.get_json()
-        print("Received data:", data)
+        print("Received data:", data)  # Debugging log (will show in terminal)
         email = data.get("email")
 
         print("=" * 76)
         print(data)
         print("=" * 76)
 
+        # Convert input data into DataFrame
         input_df = pd.DataFrame([data], columns=FEATURES)
+        print("Converted DataFrame:", input_df)  # Debugging log
 
+        # Convert DataFrame to DMatrix for XGBoost
         dmatrix = xgb.DMatrix(input_df)
 
+        # Make prediction
         prediction = model.predict(dmatrix)
 
         store_tests_in_firestore(
@@ -287,10 +273,11 @@ def predict():
             store_diabetes_tests_in_firestore(data),
         )
 
+        # Return prediction as JSON response
         return jsonify({"prediction": float(prediction[0] * 100)})
 
     except Exception as e:
-        print("Error:", str(e))
+        print("Error:", str(e))  # Debugging log
 
 
 @app.route("/ReportUpload", methods=["POST"])
