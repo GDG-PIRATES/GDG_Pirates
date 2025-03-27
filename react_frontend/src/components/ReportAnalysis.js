@@ -38,7 +38,7 @@ const ReportAnalysis = () => {
     formData.append("file", file);
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/ReportUpload", formData, {
+      const response = await axios.post("https://gdg-pirates-xz8u.onrender.com/ReportUpload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         responseType: "blob",
       });
