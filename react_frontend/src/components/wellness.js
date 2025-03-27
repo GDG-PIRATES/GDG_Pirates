@@ -6,8 +6,8 @@ import '../Home.css'; // Import the CSS file
 const Wellness = () => {
   const [query, setQuery] = useState("");
   const [foods, setFoods] = useState([]);
-  const APP_ID = "d097a8e4"; 
-  const API_KEY = "52a655d9ef0e9c169e348d972e5f228d"; 
+  const APP_ID = process.env.REACT_APP_WELLNESS_APP_ID; 
+  const API_KEY = process.env.REACT_APP_WELLNESS_API_KEY; 
 
   const fetchNutritionData = async () => {
     if (!query) return;

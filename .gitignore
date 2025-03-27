@@ -2,5 +2,6 @@ venv/
 *.dll
 .env
 
+backend/flask/firebaseCred.json
 backend/flask/processed_reports
 backend/flask/uploads

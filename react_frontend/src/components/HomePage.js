@@ -67,20 +67,19 @@ const HomePage = () => {
   useEffect(() => {
     const fetchHealthNews = async () => {
       try {
-        const response = await fetch(
-          "https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey=78cd149b38d54c17b2bd74efe6e381c0"
-        );
+        const apiurl = process.env.REACT_APP_NEWS_API_URL;
+        const response = await fetch(apiurl);
         const data = await response.json();
-          const filteredArticles = data.articles
-          .filter((article) => article.urlToImage) 
-          .slice(0, 20); 
-  
+        const filteredArticles = data.articles
+          .filter((article) => article.urlToImage)
+          .slice(0, 20);
+
         setArticles(filteredArticles);
       } catch (error) {
         console.error("Error fetching news:", error);
       }
     };
-  
+
     fetchHealthNews();
   }, []);
 
@@ -184,24 +183,24 @@ const HomePage = () => {
       </div>
       {/* Health Articles Section */}
       <div className="articles-container">
-          <h2 className="articles-heading">Latest Health News</h2>
-          <div className="articles-scroll">
-            {articles.map((article, index) => (
-              <div key={index} className="article-box">
-                <img
-                  src={article.urlToImage}
-                  alt="Article"
-                  className="article-image"
-                />
-                <h3>{article.title}</h3>
-                <p>{article.description}</p>
-                <a href={article.url} target="_blank" rel="noopener noreferrer">
-                  Read More
-                </a>
-              </div>
-            ))}
-          </div>
+        <h2 className="articles-heading">Latest Health News</h2>
+        <div className="articles-scroll">
+          {articles.map((article, index) => (
+            <div key={index} className="article-box">
+              <img
+                src={article.urlToImage}
+                alt="Article"
+                className="article-image"
+              />
+              <h3>{article.title}</h3>
+              <p>{article.description}</p>
+              <a href={article.url} target="_blank" rel="noopener noreferrer">
+                Read More
+              </a>
+            </div>
+          ))}
         </div>
+      </div>
     </div>
   );
 };

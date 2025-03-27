@@ -19,10 +19,23 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000"])
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+cred = credentials.Certificate(
+    {
+        "type": "service_account",
+        "project_id": os.getenv("FIREBASE_PROJECT_ID"),
+        "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
+        "private_key": os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n"),
+        "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
+        "client_id": os.getenv("FIREBASE_CLIENT_ID"),
+        "auth_uri": os.getenv("FIREBASE_AUTH_URI"),
+        "token_uri": os.getenv("FIREBASE_TOKEN_URI"),
+        "auth_provider_x509_cert_url": os.getenv(
+            "FIREBASE_AUTH_PROVIDER_X509_CERT_URL"
+        ),
+        "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL"),
+    }
+)
 
-cred_path = os.path.join(BASE_DIR, "firebaseCred.json")
-
-cred = credentials.Certificate(cred_path)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -41,15 +54,19 @@ os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
 
 def store_tests_in_firestore(emailID, testName, date, prediction, testid):
-    doc_ref = PreviousTests_collection_ref.add(
-        {
-            "Email_ID": emailID,
-            "Test_ID": testid,
-            "Test_Name": testName,
-            "Date_Time": date,
-            "Prediction_Percentage": prediction,
-        }
-    )
+    try:
+        doc_ref = PreviousTests_collection_ref.add(
+            {
+                "Email_ID": emailID,
+                "Test_ID": testid,
+                "Test_Name": testName,
+                "Date_Time": date,
+                "Prediction_Percentage": prediction,
+            }
+        )
+        print(f"Stored test in Firestore with ID: {doc_ref.id}")  # Optional debug log
+    except Exception as e:
+        print("Error storing test in Firestore:", e)
 
 
 def store_diabetes_tests_in_firestore(data):
@@ -124,7 +141,6 @@ Your task is to analyze the following report and generate an easy-to-understand 
     except Exception as e:
         print("Error with Gemini API:", e)
         return "AI analysis failed."
-
 
 
 def generate_pdf_report(ai_insights, output_pdf_path):
@@ -206,6 +222,7 @@ def generate_pdf_report(ai_insights, output_pdf_path):
     except Exception as e:
         print("Error generating PDF report:", e)
 
+
 @app.route("/check", methods=["POST"])
 def login():
     userData = request.get_json()  # Get JSON userData from React
@@ -245,7 +262,7 @@ def predict():
 
     try:
         data = request.get_json()
-        print("Received data:", data) 
+        print("Received data:", data)
         email = data.get("email")
 
         print("=" * 76)
@@ -258,18 +275,18 @@ def predict():
 
         prediction = model.predict(dmatrix)
 
-        store_tests_in_firestore(
-            email,
-            "diabetes",
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            float(prediction[0] * 100),
-            store_diabetes_tests_in_firestore(data),
-        )
+        # store_tests_in_firestore(
+        #     email,
+        #     "diabetes",
+        #     datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        #     float(prediction[0] * 100),
+        #     store_diabetes_tests_in_firestore(data),
+        # )
 
         return jsonify({"prediction": float(prediction[0] * 100)})
 
     except Exception as e:
-        print("Error:", str(e)) 
+        print("Error:", str(e))
 
 
 @app.route("/ReportUpload", methods=["POST"])

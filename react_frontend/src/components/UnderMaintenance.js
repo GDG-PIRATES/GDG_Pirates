@@ -5,7 +5,7 @@ const UnderMaintenance = () => {
     
     <div style={{ textAlign: "center", marginTop: "50px", color: "red" }}>
         <nav className="navbar">
-        <h2>DetectX</h2>
+        <h2 style={{ color: "white" }}>DetectX</h2>
         <ul>
           <li>
             <a href="/home">Home</a>
@@ -18,6 +18,9 @@ const UnderMaintenance = () => {
           </li>
           <li>
             <a href="#">About Us</a>
+          </li>
+          <li>
+            <a href="/">Logout</a>
           </li>
         </ul>
       </nav>

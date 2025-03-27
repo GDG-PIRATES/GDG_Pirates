@@ -67,6 +67,9 @@ const ReportAnalysis = () => {
           <li><a href="#">Wellness Guide</a></li>
           <li><a href="#">Profile</a></li>
           <li><a href="#">About Us</a></li>
+          <li>
+            <a href="/">Logout</a>
+          </li>
         </ul>
       </nav>
 
