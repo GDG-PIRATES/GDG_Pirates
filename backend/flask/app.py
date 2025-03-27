@@ -279,13 +279,13 @@ def predict():
 
         prediction = model.predict(dmatrix)
 
-        # store_tests_in_firestore(
-        #     email,
-        #     "diabetes",
-        #     datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        #     float(prediction[0] * 100),
-        #     store_diabetes_tests_in_firestore(data),
-        # )
+        store_tests_in_firestore(
+            email,
+            "diabetes",
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            float(prediction[0] * 100),
+            store_diabetes_tests_in_firestore(data),
+        )
 
         return jsonify({"prediction": float(prediction[0] * 100)})
 
