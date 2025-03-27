@@ -1,5 +1,3 @@
 venv/
 *.dll
 .env
-
-backend/flask/firebaseCred.json
