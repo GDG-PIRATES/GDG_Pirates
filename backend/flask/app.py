@@ -207,6 +207,10 @@ def generate_pdf_report(ai_insights, output_pdf_path):
     except Exception as e:
         print("Error generating PDF report:", e)
 
+@app.route("/")
+def page():
+    return "<h1>This is just the backend</h1>"
+
 
 @app.route("/check", methods=["POST"])
 def login():
