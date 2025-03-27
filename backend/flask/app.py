@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["https://detectxhealth.netlify.app"])
+CORS(app, resources={r"/*": {"origins": "https://detectxhealth.netlify.app"}})
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -207,6 +207,7 @@ def generate_pdf_report(ai_insights, output_pdf_path):
     except Exception as e:
         print("Error generating PDF report:", e)
 
+
 @app.route("/")
 def page():
     return "<h1>This is just the backend</h1>"
@@ -309,13 +310,14 @@ def upload_file():
 
     ai_insights = analyze_text_with_gemini(extracted_text)
 
-    processed_pdf_path = os.path.join(PROCESSED_FOLDER, "Processed_Report.pdf")
-    generate_pdf_report(ai_insights, processed_pdf_path)
+    output_pdf_path = os.path.join(PROCESSED_FOLDER, "Processed_Report.pdf")
+    generate_pdf_report(ai_insights, output_pdf_path)
+    print(f"PDF saved at: {output_pdf_path}, Exists: {os.path.exists(output_pdf_path)}")
 
-    if not os.path.exists(processed_pdf_path):
+    if not os.path.exists(output_pdf_path):
         return jsonify({"error": "Generated PDF not found"}), 500
 
-    return send_file(processed_pdf_path, as_attachment=True, mimetype="application/pdf")
+    return send_file(output_pdf_path, as_attachment=True, mimetype="application/pdf")
 
 
 if __name__ == "__main__":
