@@ -43,6 +43,7 @@ UPLOAD_FOLDER = "uploads"
 PROCESSED_FOLDER = "processed_reports"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
+PROCESSED_FOLDER = os.path.join(BASE_DIR, "processed_reports")
 
 
 def store_tests_in_firestore(emailID, testName, date, prediction, testid):
@@ -294,9 +295,11 @@ def upload_file():
     if uploaded_file.filename == "":
         return jsonify({"error": "No selected file"}), 400
 
+    # Save file in uploads directory
     file_path = os.path.join(UPLOAD_FOLDER, uploaded_file.filename)
     uploaded_file.save(file_path)
 
+    # Extract text from PDF or Image
     extracted_text = ""
     if uploaded_file.filename.lower().endswith(".pdf"):
         extracted_text = extract_text_from_pdf(file_path)
@@ -308,16 +311,27 @@ def upload_file():
     if not extracted_text:
         return jsonify({"error": "No text found in the file"}), 400
 
+    # Generate AI insights
     ai_insights = analyze_text_with_gemini(extracted_text)
 
+    # Ensure PROCESSED_FOLDER exists
+    os.makedirs(PROCESSED_FOLDER, exist_ok=True)
+
+    # Use absolute path for processed report
     output_pdf_path = os.path.join(PROCESSED_FOLDER, "Processed_Report.pdf")
+
+    # Generate PDF
     generate_pdf_report(ai_insights, output_pdf_path)
     print(f"PDF saved at: {output_pdf_path}, Exists: {os.path.exists(output_pdf_path)}")
 
+    # Verify if file exists before sending
     if not os.path.exists(output_pdf_path):
         return jsonify({"error": "Generated PDF not found"}), 500
 
-    return send_file(output_pdf_path, as_attachment=True, mimetype="application/pdf")
+    # Use absolute path when sending file
+    return send_file(
+        os.path.abspath(output_pdf_path), as_attachment=True, mimetype="application/pdf"
+    )
 
 
 if __name__ == "__main__":
