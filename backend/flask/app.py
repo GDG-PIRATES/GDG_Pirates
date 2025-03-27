@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
+CORS(app, origins=["https://detectxhealth.netlify.app"])
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 cred = credentials.Certificate(
