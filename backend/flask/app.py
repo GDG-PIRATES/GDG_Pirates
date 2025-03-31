@@ -307,9 +307,11 @@ def upload_file():
         extracted_text = extract_text_from_image(file_path)
     else:
         return jsonify({"error": "Unsupported file format"}), 400
-
-    if not extracted_text:
-        return jsonify({"error": "No text found in the file"}), 400
+    patient_name = "Unknown_Patient"
+    for line in extracted_text.split("\n"):
+        if "Name:" in line: 
+            patient_name = line.split(":", 1)[1].strip().replace(" ", "_")
+            break
 
     # Generate AI insights
     ai_insights = analyze_text_with_gemini(extracted_text)
@@ -318,7 +320,7 @@ def upload_file():
     os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
     # Use absolute path for processed report
-    output_pdf_path = os.path.join(PROCESSED_FOLDER, "Processed_Report.pdf")
+    output_pdf_path = os.path.join(PROCESSED_FOLDER, f"{patient_name}.pdf")
 
     # Generate PDF
     generate_pdf_report(ai_insights, output_pdf_path)
