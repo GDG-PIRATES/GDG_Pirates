@@ -18,7 +18,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://detectxhealth.netlify.app"}})
+# CORS(app, resources={r"/*": {"origins": "https://detectxhealth.netlify.app"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -344,9 +345,10 @@ def getDate():
 def get_news_from_api():
     query = "healthtips"
     if query != "":
-        url = f"https://newsapi.org/v2/everything?q={query}&from={getDate()}&sortBy=publishedAt&apiKey={os.getenv("NEWS_API")}"
+        url = os.getenv("NEWS_URL")
         req = requests.get(url)
-        news = json.loads()
+        news = json.loads(req.text)
+        print(news)
         return news
 
 if __name__ == "__main__":
