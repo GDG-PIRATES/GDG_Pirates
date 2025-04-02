@@ -18,8 +18,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-# CORS(app, resources={r"/*": {"origins": "https://detectxhealth.netlify.app"}})
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": "https://detectxhealth.netlify.app"}})
+# CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
