@@ -3,6 +3,7 @@ import os
 from flask import Flask, json, request, jsonify, send_file
 from flask_cors import CORS
 import firebase_admin
+import requests
 import xgboost as xgb
 import pandas as pd
 from firebase_admin import credentials, firestore
@@ -21,7 +22,7 @@ CORS(app, resources={r"/*": {"origins": "https://detectxhealth.netlify.app"}})
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-firebase_cred_base64 = os.getenv("FIREBASE_CRED_BASE64")
+firebase_cred_base64 = os.getenv("FIREBASE_CRED")
 if not firebase_cred_base64:
     raise ValueError("Firebase credentials not found in environment variables")
 firebase_cred_json = base64.b64decode(firebase_cred_base64).decode("utf-8")
@@ -335,6 +336,18 @@ def upload_file():
         os.path.abspath(output_pdf_path), as_attachment=True, mimetype="application/pdf"
     )
 
+
+def getDate():
+    return datetime.now().strftime("%Y-%d-%m")
+
+@app.route("/news", methods=["POST", "GET"])
+def get_news_from_api():
+    query = "healthtips"
+    if query != "":
+        url = f"https://newsapi.org/v2/everything?q={query}&from={getDate()}&sortBy=publishedAt&apiKey={os.getenv("NEWS_API")}"
+        req = requests.get(url)
+        news = json.loads()
+        return news
 
 if __name__ == "__main__":
     app.run(debug=True)
