@@ -311,7 +311,7 @@ def upload_file():
         return jsonify({"error": "Unsupported file format"}), 400
     patient_name = "Unknown_Patient"
     for line in extracted_text.split("\n"):
-        if "Name:" in line: 
+        if "Name:" in line:
             patient_name = line.split(":", 1)[1].strip().replace(" ", "_")
             break
 
@@ -341,15 +341,22 @@ def upload_file():
 def getDate():
     return datetime.now().strftime("%Y-%d-%m")
 
+
 @app.route("/news", methods=["POST", "GET"])
 def get_news_from_api():
-    query = "healthtips"
-    if query != "":
-        url = os.getenv("NEWS_URL")
-        req = requests.get(url)
-        news = json.loads(req.text)
-        print(news)
-        return news
+    url = os.getenv("NEWS_URL")
+    querystring = {"lr": "en-US"}
+
+    headers = {
+        "x-rapidapi-key": os.getenv("NEWS_API"),
+        "x-rapidapi-host": os.getenv("NEWS_HOST"),
+    }
+
+    response = requests.get(url, headers=headers, params=querystring)
+
+    news = response.json()
+    return news
+
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
