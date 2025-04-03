@@ -342,20 +342,33 @@ def getDate():
     return datetime.now().strftime("%Y-%d-%m")
 
 
-@app.route("/news", methods=["POST", "GET"])
+@app.route("/news", methods=["GET"])
 def get_news_from_api():
-    url = os.getenv("NEWS_URL")
-    querystring = {"lr": "en-US"}
+    url = "http://api.mediastack.com/v1/news"
+    access_key = os.getenv("MEDIASTACK_API_KEY")  
 
-    headers = {
-        "x-rapidapi-key": os.getenv("NEWS_API"),
-        "x-rapidapi-host": os.getenv("NEWS_HOST"),
+    params = {
+        "access_key": access_key,
+        "languages": "en",  
+        "countries": "us",  
+        "categories": "health",
+        "sort": "latest",
+        "limit": 50,  
     }
 
-    response = requests.get(url, headers=headers, params=querystring)
+    response = requests.get(url, params=params)
+
+    if response.status_code != 200:
+        return jsonify({"error": "Failed to fetch news"}), response.status_code
 
     news = response.json()
-    return news
+
+    # Filtering out articles that do not have a valid image
+    filtered_articles = [
+        article for article in news.get("data", []) if article.get("image") and article["image"].strip()
+    ]
+
+    return jsonify({"articles": filtered_articles})
 
 
 if __name__ == "__main__":
