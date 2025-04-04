@@ -365,7 +365,6 @@ def get_news_from_api():
 
     news = response.json()
 
-    # Filtering out articles that do not have a valid image
     filtered_articles = [
         article for article in news.get("data", []) if article.get("image") and article["image"].strip()
     ]
