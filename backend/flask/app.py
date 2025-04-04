@@ -14,9 +14,11 @@ from datetime import datetime
 import fitz
 import google.generativeai as genai
 from dotenv import load_dotenv
+import pytz
 
 load_dotenv()
 
+INDIAN_TIMEZONE = pytz.timezone("Asia/Kolkata")
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://detectxhealth.netlify.app"}})
 # CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -276,7 +278,7 @@ def predict():
         store_tests_in_firestore(
             email,
             "diabetes",
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            datetime.now(INDIAN_TIMEZONE).strftime("%Y-%m-%d %H:%M:%S"),
             float(prediction[0] * 100),
             store_diabetes_tests_in_firestore(data),
         )
@@ -339,7 +341,7 @@ def upload_file():
 
 
 def getDate():
-    return datetime.now().strftime("%Y-%d-%m")
+    return datetime.now(INDIAN_TIMEZONE).strftime("%Y-%d-%m")
 
 
 @app.route("/news", methods=["GET"])
@@ -367,7 +369,7 @@ def get_news_from_api():
     filtered_articles = [
         article for article in news.get("data", []) if article.get("image") and article["image"].strip()
     ]
-
+    print(f"Filtered articles: {filtered_articles}")  # Debugging log
     return jsonify({"articles": filtered_articles})
 
 
