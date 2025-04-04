@@ -20,8 +20,8 @@ load_dotenv()
 
 INDIAN_TIMEZONE = pytz.timezone("Asia/Kolkata")
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://detectxhealth.netlify.app"}})
-# CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+# CORS(app, resources={r"/*": {"origins": "https://detectxhealth.netlify.app"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -348,13 +348,13 @@ def getDate():
 def get_news_from_api():
     url = "http://api.mediastack.com/v1/news"
     access_key = os.getenv("MEDIASTACK_API_KEY")  
-
+    print(access_key)
     params = {
         "access_key": access_key,
         "languages": "en",  
         "countries": "us",  
         "categories": "health",
-        "sort": "latest",
+        "sort": "published_desc",
         "limit": 50,  
     }
 
@@ -365,7 +365,6 @@ def get_news_from_api():
 
     news = response.json()
 
-    # Filtering out articles that do not have a valid image
     filtered_articles = [
         article for article in news.get("data", []) if article.get("image") and article["image"].strip()
     ]
