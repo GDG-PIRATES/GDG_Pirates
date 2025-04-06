@@ -220,7 +220,7 @@ def page():
 
 @app.route("/check", methods=["POST"])
 def login():
-    userData = request.get_json()  # Get JSON userData from React
+    userData = request.get_json()  
     email = userData.get("email")
     uid = userData.get("uid")
 
@@ -256,23 +256,18 @@ def predict():
         return jsonify({"error": "Content-Type must be application/json"}), 415
 
     try:
-        # Get JSON data from request
         data = request.get_json()
-        print("Received data:", data)  # Debugging log (will show in terminal)
+        print("Received data:", data)  
         email = data.get("email")
 
         print("=" * 76)
         print(data)
         print("=" * 76)
 
-        # Convert input data into DataFrame
         input_df = pd.DataFrame([data], columns=FEATURES)
-        print("Converted DataFrame:", input_df)  # Debugging log
 
-        # Convert DataFrame to DMatrix for XGBoost
         dmatrix = xgb.DMatrix(input_df)
 
-        # Make prediction
         prediction = model.predict(dmatrix)
 
         store_tests_in_firestore(
@@ -283,11 +278,10 @@ def predict():
             store_diabetes_tests_in_firestore(data),
         )
 
-        # Return prediction as JSON response
         return jsonify({"prediction": float(prediction[0] * 100)})
 
     except Exception as e:
-        print("Error:", str(e))  # Debugging log
+        print("Error:", str(e))  
 
 
 @app.route("/ReportUpload", methods=["POST"])
@@ -299,11 +293,9 @@ def upload_file():
     if uploaded_file.filename == "":
         return jsonify({"error": "No selected file"}), 400
 
-    # Save file in uploads directory
     file_path = os.path.join(UPLOAD_FOLDER, uploaded_file.filename)
     uploaded_file.save(file_path)
 
-    # Extract text from PDF or Image
     extracted_text = ""
     if uploaded_file.filename.lower().endswith(".pdf"):
         extracted_text = extract_text_from_pdf(file_path)
@@ -317,24 +309,18 @@ def upload_file():
             patient_name = line.split(":", 1)[1].strip().replace(" ", "_")
             break
 
-    # Generate AI insights
     ai_insights = analyze_text_with_gemini(extracted_text)
 
-    # Ensure PROCESSED_FOLDER exists
     os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
-    # Use absolute path for processed report
     output_pdf_path = os.path.join(PROCESSED_FOLDER, f"{patient_name}.pdf")
 
-    # Generate PDF
     generate_pdf_report(ai_insights, output_pdf_path)
     print(f"PDF saved at: {output_pdf_path}, Exists: {os.path.exists(output_pdf_path)}")
 
-    # Verify if file exists before sending
     if not os.path.exists(output_pdf_path):
         return jsonify({"error": "Generated PDF not found"}), 500
 
-    # Use absolute path when sending file
     return send_file(
         os.path.abspath(output_pdf_path), as_attachment=True, mimetype="application/pdf"
     )
@@ -368,7 +354,6 @@ def get_news_from_api():
     filtered_articles = [
         article for article in news.get("data", []) if article.get("image") and article["image"].strip()
     ]
-    print(f"Filtered articles: {filtered_articles}")  # Debugging log
     return jsonify({"articles": filtered_articles})
 
 
